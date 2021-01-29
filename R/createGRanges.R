@@ -1,4 +1,3 @@
-# Code is adapted from cpvSNP::createArrayData
 #' @title Create a GenomicRanges::GRanges object.
 #'
 #' @description Creates a GenomicRanges::GRanges object from a data frame containing genomic coordinates and metadata.
