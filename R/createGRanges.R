@@ -14,6 +14,8 @@
 #' @importFrom GenomicRanges GRanges elementMetadata<- 
 #' @importFrom IRanges IRanges
 #' @importFrom S4Vectors Rle
+#' @importFrom methods is
+#' @export
 #'
 #' @examples
 #' 
