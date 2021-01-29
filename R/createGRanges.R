@@ -1,19 +1,35 @@
 # Code is adapted from cpvSNP::createArrayData
-# TODO handling chromosomes with labels outside 1-22
+#' @title Create a GenomicRanges::GRanges object.
 #'
+#' @description Creates a GenomicRanges::GRanges object from a data frame containing genomic coordinates and metadata.
 #'
+#' @details Adapted from the code for cpvSNP::createArrayData.
 #'
-#' @importFrom GenomicRanges GRanges IRanges Rle elementMetadata<- 
+#' @param dataFrame A data.frame containing genomic coordinates and metadata
+#' @param chrCol A string giving the name of chromosome column
+#' @param bpCol A string giving the name of basepair column
+#'
+#' @return A GenomicRanges::GRanges object containing the same (meta)data as dataFrame
+#' 
+#' @importFrom GenomicRanges GRanges elementMetadata<- 
+#' @importFrom IRanges IRanges
+#' @importFrom S4Vectors Rle
+#'
+#' @examples
+#' 
+#' gwasDaf<-data.frame('chr'=1:10, 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
+#' granges<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
+#' 
 createGRanges<-function(dataFrame, chrCol, bpCol) {
   if(!is(dataFrame, 'data.frame') | is(dataFrame, 'data.table')) {
     stop('dataFrame must be a data.frame object')
   }
 
-  if(!is.element(names(dataFrame), chrCol)) {
+  if(!any(is.element(names(dataFrame), chrCol))) {
     stop('chrCol name is not a column name in dataFrame')
   }
 
-  if(!is.element(names(dataFrame), bpCol)) {
+  if(!any(is.element(names(dataFrame), bpCol))) {
     stop('bpCol name is not a column name in dataFrame')
   }
 

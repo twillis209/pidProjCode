@@ -3,3 +3,6 @@
 .Rdata
 .httr-oauth
 .DS_Store
+..Rcheck
+pidProjCode.Rcheck
+pidProjCode_*.tar.gz

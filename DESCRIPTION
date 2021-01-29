@@ -2,11 +2,7 @@ Package: pidProjCode
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "Tom",
-           family = "Willis",
-           role = c("aut", "cre"),
-           email = "tw395@cam.ac.uk",
-           comment = c(ORCID = "https://orcid.org/0000-0001-6138-3496"))
+    person(given = "Tom", family = "Willis", role = c("aut", "cre"), email = "tw395@cam.ac.uk", comment = c(ORCID = "https://orcid.org/0000-0001-6138-3496"))
 Description: Code for use in my PID project
 License: MIT + file LICENSE
 Encoding: UTF-8
