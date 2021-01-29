@@ -1,0 +1,43 @@
+# Code is adapted from cpvSNP::createArrayData
+# TODO handling chromosomes with labels outside 1-22
+#'
+#'
+#'
+#' @importFrom GenomicRanges GRanges IRanges Rle elementMetadata<- 
+createGRanges<-function(dataFrame, chrCol, bpCol) {
+  if(!is(dataFrame, 'data.frame') | is(dataFrame, 'data.table')) {
+    stop('dataFrame must be a data.frame object')
+  }
+
+  if(!is.element(names(dataFrame), chrCol)) {
+    stop('chrCol name is not a column name in dataFrame')
+  }
+
+  if(!is.element(names(dataFrame), bpCol)) {
+    stop('bpCol name is not a column name in dataFrame')
+  }
+
+  names(dataFrame)[is.element(names(dataFrame), chrCol)]<-'chromosome'
+
+  dataFrame$Start<-dataFrame[,bpCol]
+  dataFrame$End<-dataFrame[,bpCol]
+
+  dataFrame$Start[is.na(dataFrame$chromosome)]<-1
+  dataFrame$End[is.na(dataFrame$chromosome)]<-1
+
+  dataFrame$chromosome[is.na(dataFrame$chromosome)]<-'U'
+
+  dataFrame$chromosome <- factor(dataFrame$chromosome)
+
+  levels(dataFrame$chromosome)<-paste('chr', levels(dataFrame$chromosome), sep = '')
+
+  dataFrame<-dataFrame[order(dataFrame$chromosome, dataFrame$Start),]
+
+  granges<-GRanges(Rle(dataFrame$chromosome),IRanges(start=dataFrame$Start, end=dataFrame$End))
+
+  dropIndices<-which(names(dataFrame) %in% c('chromosome','Start','End',bpCol))
+
+  elementMetadata(granges)<-dataFrame[,-dropIndices]
+
+  granges
+}
