@@ -52,6 +52,7 @@ createGRanges<-function(dataFrame, chrCol, bpCol) {
 
   granges<-GRanges(Rle(dataFrame$chromosome),IRanges(start=dataFrame$Start, end=dataFrame$End))
 
+  # Avoid duplicating genomic coordinates in metadata 
   dropIndices<-which(names(dataFrame) %in% c('chromosome','Start','End',bpCol))
 
   elementMetadata(granges)<-dataFrame[,-dropIndices]

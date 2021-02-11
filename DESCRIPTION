@@ -16,4 +16,5 @@ Imports:
     GenomicRanges,
     IRanges,
     S4Vectors,
-    methods
+    methods,
+    stats
