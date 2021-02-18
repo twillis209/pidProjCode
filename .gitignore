@@ -6,3 +6,4 @@
 ..Rcheck
 pidProjCode.Rcheck
 pidProjCode_*.tar.gz
+inst/doc

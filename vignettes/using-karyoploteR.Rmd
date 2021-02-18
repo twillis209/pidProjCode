@@ -1,0 +1,78 @@
+---
+title: "Using createGRanges with karyoploteR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using createGRanges with karyoploteR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(pidProjCode)
+library(karyoploteR)
+library(data.table)
+library(TxDb.Hsapiens.UCSC.hg38.knownGene)
+```
+
+As a sample data set we use a subset of the data from a GWAS of selective IgA deficiency by Bronson et al. (2016). This contains only the SNPs on chromosome 6 from 25Mb to 36Mb. 
+
+```{r loadExampleData}
+#dat<-fread(file=system.file('inst/extdata', 'karyoploterExampleData.tsv.gz', package='pidProjCode', mustWork=T), sep='\t', header=T, select=c('SNPID','CHR38','BP38','P'))
+
+dat<-fread(file='karyoploterExampleData.tsv.gz', sep='\t', header=T, select=c('SNPID','CHR38','BP38','P'))
+```
+
+The first obstacle to getting `karyoploteR` working was getting GWAS data into a `GenomicRanges` object. I found the function `cpvSnp::createArrayData` which achieved something like this and wrote `createGRanges` as a stripped-down version of it. 
+
+To create a `GenomicRanges` object, we need to specify the data and the names of the columns giving the chromosome and basepair coordinates. Any other columns will be kicked into the metadata. As written, `createGRanges` cannot take a `data.table` object so we need to convert `dat` to a `data.frame` first.
+
+A useful feature of `karyoploteR` is the highlighting of specified SNPs. These need to be given in a `GenomicRanges` object, too, so we create `topSnpGRanges` to hold a single SNP. For a Manhattan plot we want a y axis on the negative log10 scale, but `karyoploteR` doesn't seem to heed this for highlighted SNPs, so we specify the y coordinate as an extra metadata column in the `GenomicRanges` object
+
+```{r creatingGRangesObjects}
+gRanges<-createGRanges(data.frame(dat), bpCol='BP38', chrCol='CHR38')
+
+topSnps<-c('rs116540075')
+
+topSnpGRanges<-createGRanges(data.frame(dat[SNPID %in% topSnps][, y:= -log10(P)]), bpCol='BP38', chrCol='CHR38')
+```
+
+`createGRanges` is the only function from this package (`pidProjCode`) called in this vignette. The rest come from `karyoploteR` or its imports.
+
+```{r manhattan}
+ymax<-137
+r0<-0
+
+kp<-plotKaryotype(plot.type=4, labels.plotter=NULL, zoom="chr6:25e6-36e6")
+title(main='IgAD GWAS, chr6:25M-36M, MHC boxed in blue, top extra-MHC SNP rs116540075 circled in red', cex.main=2.7)
+kpAddBaseNumbers(kp, add.units=T, cex=1, tick.dist=5e5)
+kpAxis(kp, ymin=0,ymax=ymax, r0=r0)
+kp<-kpPlotManhattan(kp, data=gRanges, points.col='brewer.set3', ymax=ymax, r0=r0)
+kpRect(kp, chr='chr6', x0=28510120, x1=33480577,r0=r0, y0=0,y1=1, col=NA, border='blue', lwd=3)
+kp<-kpPoints(kp, data=topSnpGRanges, pch=1, cex=1.6, col="red", lwd=2, ymax=ymax, r0=r0)
+```
+
+```{r zoomedManhattan}
+ymax<-38
+r0<-0.2
+
+kp<-plotKaryotype(plot.type=4, labels.plotter=NULL, zoom="chr6:33e6-34e6")
+title(main='IgAD GWAS, chr6:33M-34M, neighbourhood of top extra-MHC SNP rs116540075 (circled in red)', cex.main=2.7)
+kpAddBaseNumbers(kp, add.units=T, cex=1, tick.dist=1e5)
+kpAxis(kp, ymin=0,ymax=ymax, r0=r0)
+kp<-kpPlotManhattan(kp, data=gRanges, points.col='brewer.set3', ymax=ymax, r0=r0)
+kpRect(kp, chr='chr6', x0=33e6, x1=33480577,r0=r0, y0=0,y1=1, col=NA, border='blue', lwd=3)
+kp<-kpPoints(kp, data=topSnpGRanges, pch=1, cex=1.6, col="red", lwd=2, ymax=ymax, r0=r0)
+
+genes.data<-makeGenesDataFromTxDb(karyoplot=kp, txdb=TxDb.Hsapiens.UCSC.hg38.knownGene)
+
+genes.data<-addGeneNames(genes.data)
+genes.data.merged<-mergeTranscripts(genes.data)
+kp<-kpPlotGenes(kp, data=genes.data.merged, r0=0, r1=0.2, cex=1.0, gene.name.position='left')
+```
