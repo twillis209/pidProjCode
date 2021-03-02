@@ -7,6 +7,7 @@
 #' @param dataFrame A data.frame containing genomic coordinates and metadata
 #' @param chrCol A string giving the name of chromosome column
 #' @param bpCol A string giving the name of basepair column
+#' @param nameCol A string giving the name of a column from which to get element names
 #'
 #' @return A GenomicRanges::GRanges object containing the same (meta)data as dataFrame
 #' 
@@ -19,19 +20,20 @@
 #' @examples
 #' 
 #' gwasDaf<-data.frame('chr'=1:10, 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
-#' granges<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
+#' granges<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp', nameCol='SNP')
 #' 
-createGRanges<-function(dataFrame, chrCol, bpCol) {
+createGRanges<-function(dataFrame, chrCol, bpCol, nameCol=NULL) {
   if(!is(dataFrame, 'data.frame') | is(dataFrame, 'data.table')) {
     stop('dataFrame must be a data.frame object')
   }
-
   if(!any(is.element(names(dataFrame), chrCol))) {
     stop('chrCol name is not a column name in dataFrame')
   }
-
   if(!any(is.element(names(dataFrame), bpCol))) {
     stop('bpCol name is not a column name in dataFrame')
+  }
+  if(!is.null(nameCol) & !any(is.element(names(dataFrame), nameCol))) {
+    stop('nameCol name is not a column name in dataFrame')
   }
 
   names(dataFrame)[is.element(names(dataFrame), chrCol)]<-'chromosome'
@@ -46,16 +48,19 @@ createGRanges<-function(dataFrame, chrCol, bpCol) {
 
   dataFrame$chromosome <- factor(dataFrame$chromosome)
 
-  levels(dataFrame$chromosome)<-paste('chr', levels(dataFrame$chromosome), sep = '')
+  levels(dataFrame$chromosome) <- paste('chr', levels(dataFrame$chromosome), sep = '')
 
-  dataFrame<-dataFrame[order(dataFrame$chromosome, dataFrame$Start),]
+  dataFrame <- dataFrame[order(dataFrame$chromosome, dataFrame$Start),]
 
-  granges<-GRanges(Rle(dataFrame$chromosome),IRanges(start=dataFrame$Start, end=dataFrame$End))
+  if(!is.null(nameCol)) {
+    granges <- GRanges(Rle(dataFrame$chromosome),IRanges(start=dataFrame$Start, end=dataFrame$End, names = dataFrame[[nameCol]]))
+  } else {
+    granges <- GRanges(Rle(dataFrame$chromosome),IRanges(start=dataFrame$Start, end=dataFrame$End))
+  }
 
-  # Avoid duplicating genomic coordinates in metadata 
-  dropIndices<-which(names(dataFrame) %in% c('chromosome','Start','End',bpCol))
+  dropIndices <- which(names(dataFrame) %in% c('chromosome','Start','End',bpCol))
 
-  elementMetadata(granges)<-dataFrame[,-dropIndices]
+  elementMetadata(granges) <- dataFrame[,-dropIndices]
 
   granges
 }
