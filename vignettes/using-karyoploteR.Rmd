@@ -193,6 +193,28 @@ kpAddLabels(kp, labels = 'UC', srt=90, pos=3, r0=at$r0, r1=at$r1, cex=cex.label,
 kpAxis(kp, ymin=0, ymax=ymax, r0=at$r0, r1=at$r1)
 ```
 
+## Adding legends
+
+As discussed [here](https://support.bioconductor.org/p/124328/), legends can be added as usual when working with base graphics.
+
+```{r legendExample}
+
+kp <- plotKaryotype(plot.type=4, labels.plotter=NULL, zoom="chr6:25e6-36e6")
+kpAddBaseNumbers(kp, add.units=T, cex=cex.tick, tick.dist=1e6)
+
+
+title(main='IgAD and PID GWAS, chr6:25M-36M', cex.main=cex.main)
+
+kpAddLabels(kp, labels = "IgAD", srt=90, pos=3, r0=0.7, r1=1, cex=cex.label, label.margin = 0.025)
+kpAxis(kp, ymin=0, ymax=40, r0=0.5)
+kp <- kpPlotManhattan(kp, data=igadGRanges, r0=0.5, r1=1, ymax=40)
+kpAddLabels(kp, labels = "PID", srt=90, pos=3, r0=0, r1=0.3, cex=cex.label, label.margin = 0.025)
+kpAxis(kp, ymin=0, ymax=10, r0=0.5, r1=0)
+kp <- kpPlotManhattan(kp, data=pidGRanges, r0=0.5, r1=0, ymax=10, points.col = "2blues")
+
+legend(x = "topright", fill = c("#6caeff", "#2b5d9b"), legend = c("IgAD", "PID"))
+```
+
 ## Using `backToBackManhattan`
 
 I have written a convenience function for drawing 'back-to-back' Manhattan plots with `karyoploteR`, `backToBackManhattan`. These plots allow one to compare results from two GWAS. The function itself does nothing clever and was written merely to save my having to copy and tweak the same boilerplate plotting code over and over.
