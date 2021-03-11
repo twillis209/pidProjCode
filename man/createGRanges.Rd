@@ -4,7 +4,7 @@
 \alias{createGRanges}
 \title{Create a GenomicRanges::GRanges object.}
 \usage{
-createGRanges(dataFrame, chrCol, bpCol)
+createGRanges(dataFrame, chrCol, bpCol, nameCol = NULL)
 }
 \arguments{
 \item{dataFrame}{A data.frame containing genomic coordinates and metadata}
@@ -12,6 +12,8 @@ createGRanges(dataFrame, chrCol, bpCol)
 \item{chrCol}{A string giving the name of chromosome column}
 
 \item{bpCol}{A string giving the name of basepair column}
+
+\item{nameCol}{A string giving the name of a column from which to get element names}
 }
 \value{
 A GenomicRanges::GRanges object containing the same (meta)data as dataFrame
@@ -25,6 +27,6 @@ Adapted from the code for cpvSNP::createArrayData.
 \examples{
 
 gwasDaf<-data.frame('chr'=1:10, 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
-granges<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
+granges<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp', nameCol='SNP')
 
 }

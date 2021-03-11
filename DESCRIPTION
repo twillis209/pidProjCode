@@ -14,14 +14,14 @@ Suggests:
     testthat (>= 3.0.0),
     knitr,
     rmarkdown,
-    karyoploteR,
-    data.table,
-    TxDb.Hsapiens.UCSC.hg38.knownGene
+    data.table
 Config/testthat/edition: 3
 Imports: 
     GenomicRanges,
     IRanges,
     S4Vectors,
     methods,
-    stats
+    stats,
+    karyoploteR,
+    TxDb.Hsapiens.UCSC.hg38.knownGene
 VignetteBuilder: knitr
