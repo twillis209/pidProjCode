@@ -32,6 +32,12 @@ igadDat <- fread(file=system.file('extdata', 'igadGwas.tsv.gz', package='pidProj
 pidDat <- fread(file=system.file('extdata', 'pidGwas.tsv.gz', package='pidProjCode', mustWork=T), sep='\t', header=T, select=c('SNPID','CHR38','BP38','P'))
 sleDat <- fread(file=system.file('extdata', 'sleGwas.tsv.gz', package='pidProjCode', mustWork=T), sep='\t', header=T, select=c('SNPID','CHR38','BP38','P'))
 ucDat <- fread(file=system.file('extdata', 'ucGwas.tsv.gz', package='pidProjCode', mustWork=T), sep='\t', header=T, select=c('SNPID','CHR38','BP38','P'))
+
+# ymax doesn't seem to work for me with karyoploteR
+igadDat <- igadDat[-log10(P) < 15]
+pidDat <- pidDat[-log10(P) < 15]
+sleDat <- sleDat[-log10(P) < 15]
+ucDat <- ucDat[-log10(P) < 15]
 ```
 
 The first obstacle to getting `karyoploteR` working was getting GWAS data into a `GenomicRanges` object. I found the function `cpvSnp::createArrayData` which achieved this and wrote `createGRanges` as a stripped-down version of it. 
@@ -185,4 +191,42 @@ at<-autotrack(4, 4, margin=autotrack.margin)
 kp <- kpPlotManhattan(kp, data=ucGRanges, points.col = 'brewer.set3', r0=at$r0, r1=at$r1, ymax=ymax)
 kpAddLabels(kp, labels = 'UC', srt=90, pos=3, r0=at$r0, r1=at$r1, cex=cex.label, label.margin=label.margin)
 kpAxis(kp, ymin=0, ymax=ymax, r0=at$r0, r1=at$r1)
+```
+
+## Using `backToBackManhattan`
+
+I have written a convenience function for drawing 'back-to-back' Manhattan plots with `karyoploteR`, `backToBackManhattan`. These plots allow one to compare results from two GWAS. The function itself does nothing clever and was written merely to save my having to copy and tweak the same boilerplate plotting code over and over.
+
+In my own work I have had cause to plot (transformed) GWAS results in this manner in order to assess two competing conditional FDR methods, `cfdr` and `fcfdr`. These condition p-values for the association of SNPs with a principal trait upon p-values for the association of the same SNPs with some informative auxiliary trait, and produce p-value-like 'v-values'. In this use case, it can be useful to have to hand the original principal trait p-values, so `backToBackManhattan` allows one to specify a third Manhattan.
+
+With `backToBackManhattan` one can draw:
+- whole-genome Manhattans
+- results from a selection of chromosomes (see the `chromosomes` argument)
+- a Manhattan which magnifies an interval on a single chromosome (see the `zoom` argument)
+
+In addition, the `plotGenes` flag has `karyoploteR` draw gene structures on the lowermost track. At the moment this works only when the `zoom` argument is specified because it takes a long time to draw the genes and the larger the interval, the longer the plotting time. Varying the size of the interval in on which you have `zoom`ed should give you a sense of what is a sensible interval with respect to plotting time. Longer intervals also lead to the gene track getting rather busy, which is no help if you are trying to pick out the genes in which your SNPs of interest lie.
+
+
+```{r wholeGenomeManhattan}
+backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='PID and IgAD')
+```
+
+```{r singleChromosomeManhattan}
+backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6', chromosomes='chr6', tickDist=1e7)
+```
+
+```{r singleChromosomeThreeTracksManhattan}
+backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', thirdLabel = 'SLE', thirdGRanges = sleGRanges, main='Chromosome 6', chromosomes='chr6', tickDist=1e7)
+```
+
+```{r zoomedManhattan}
+backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-36e6', tickDist=1e6)
+```
+
+```{r zoomedManhattanWithGenes}
+backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=1e5, plotGenes=T)
+```
+
+```{r zoomedManhattanWithThreeTracksAndGenes}
+backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', thirdGRanges=sleGRanges, thirdLabel='SLE', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=1e5, plotGenes=T)
 ```

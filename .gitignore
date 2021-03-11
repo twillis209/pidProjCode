@@ -9,3 +9,6 @@ pidProjCode_*.tar.gz
 inst/doc
 doc
 Meta
+scratch.R
+tests/testthat/*.png
+*.png
