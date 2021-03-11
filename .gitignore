@@ -12,3 +12,4 @@ Meta
 scratch.R
 tests/testthat/*.png
 *.png
+tests/testthat/Rplots.pdf

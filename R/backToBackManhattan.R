@@ -1,34 +1,35 @@
 #' @title Writes out a back-to-back Manhattan plot.
 #' 
-#' @description 
+#' @description Main back-to-back plot can be supplemented with a third plot and with gene structure diagrams.
 #'
 #' @details 
 #'
 #' @param topGRanges GenomicRanges object containing data for top plot
 #' @param bottomGRanges GenomicRanges object containing data for bottom plot
-#' @param outputFile
-#' @param topLabel
-#' @param bottomLabel
-#' @param main
-#' @param width
-#' @param height
-#' @param ymax
-#' @param tickDist
-#' @param plotGenes  
-#' @param thirdGRanges
-#' @param thirdLabel
-#' @param chromosomes
-#' @param zoom
+#' @param topLabel Axis label for top Manhattan plot of back-to-back pair
+#' @param bottomLabel Axis label for bottom Manhattan plot of back-to-back pair
+#' @param main Main title
+#' @param outputFile Path to output file. If omitted, plots to the screen device.
+#' @param width Width of plot in pixels for writing to file device
+#' @param height Height of plot in pixels for writing to file device
+#' @param ymax Maximum value for y axis
+#' @param tickDist Distance in basepairs between chromosome diagram ticks
+#' @param axisLabelMargin Size of margin between axis and its label
+#' @param mainTitleCex Scaling factor for main title
+#' @param axisLabelCex Scaling factor for axis label
+#' @param plotGenes Flag to have karyoploteR plot gene structures beneath Manhattan
+#' @param geneNamesCex Scaling factor for gene name labels
+#' @param thirdGRanges GenomicRanges object containing data for third plot to be placed above back-to-back Manhattans
+#' @param thirdLabel Axis label for third plot
+#' @param chromosomes List of chromosomes to plot. Expects strings of the form 'chrx' where 'x' is from the set {1, 2, ..., 22, X, Y} 
+#' @param zoom Coordinates for interval to magnify. Expects a string of the form 'chrx:a-b' where x is the chromosome number a and b are basepair coordinates.
 #'
 #' @importFrom karyoploteR plotKaryotype kpAddBaseNumbers kpAddChromosomeNames kpAddLabels kpAxis kpPlotGenes kpPlotManhattan makeGenesDataFromTxDb addGeneNames mergeTranscripts
 #' @importFrom TxDb.Hsapiens.UCSC.hg38.knownGene TxDb.Hsapiens.UCSC.hg38.knownGene
 #' @export
-#' Use cases: - two plots: c(0, 0.5, 1.0)
-#'            - two plots and a gene track: (0, 0.2), (0.2, 0.6), (0.6, 1.0)
-#'            - three plots: (0, 0.33), (0.33, 0.66), (0.68, 1.0)
-#'            - three plots and a gene track: (0, 0.2), (0.2, 0.46), (0.46, 0.72), (0.74, 1.0)
+#' 
 #' @examples
-backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel, main, outputFile=NULL, width=1800, height=1000, ymax=15, tickDist=1e5, plotGenes=F, thirdGRanges=NULL, thirdLabel=NULL, chromosomes=NULL, zoom=NULL) {
+backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel, main, outputFile=NULL, width=1800, height=1000, ymax=15, tickDist=1e5, axisLabelMargin=0.03, mainTitleCex=2.7, axisLabelCex=1.8, plotGenes=F, geneNamesCex=1, thirdGRanges=NULL, thirdLabel=NULL, chromosomes=NULL, zoom=NULL) {
 
   if(!is.null(chromosomes) & !is.null(zoom)) {
     stop("Cannot specify both \'chromosomes\' and \'zoom\'")
@@ -57,54 +58,54 @@ backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel
     kpAddChromosomeNames(kp, col='black',srt=90,cex=2)
   } 
 
-  title(main=main, cex.main=2.7)
+  title(main=main, cex.main= mainTitleCex)
 
   if(is.null(thirdGRanges)) {
     if(plotGenes) {
       # two tracks, plot genes
-      kpAddLabels(kp, labels = topLabel, srt=90, pos=3, r0=0.6, r1=1, cex=1.8, label.margin = 0.025)
+      kpAddLabels(kp, labels = topLabel, srt=90, pos=3, r0=0.6, r1=1, cex=axisLabelCex, label.margin = axisLabelMargin)
       kpAxis(kp, ymin=0, ymax=ymax, r0=0.6)
       kp <- kpPlotManhattan(kp, data=topGRanges, r0=0.6, r1=1, ymax=ymax)
 
-      kpAddLabels(kp, labels = bottomLabel, srt=90, pos=3, r0=0.6, r1=0.2, cex=1.8, label.margin = 0.025)
+      kpAddLabels(kp, labels = bottomLabel, srt=90, pos=3, r0=0.6, r1=0.2, cex=axisLabelCex, label.margin = axisLabelMargin)
       kpAxis(kp, ymin=0, ymax=ymax, r0=0.6, r1=0.2)
       kp <- kpPlotManhattan(kp, data=bottomGRanges, r0=0.6, r1=0.2, ymax=ymax, points.col = "2blues")
     } else {
       # two tracks, do not plot genes
-      kpAddLabels(kp, labels = topLabel, srt=90, pos=3, r0=0.5, r1=1, cex=1.8, label.margin = 0.025)
+      kpAddLabels(kp, labels = topLabel, srt=90, pos=3, r0=0.5, r1=1, cex=axisLabelCex, label.margin = axisLabelMargin)
       kpAxis(kp, ymin=0, ymax=ymax, r0=0.5)
       kp <- kpPlotManhattan(kp, data=topGRanges, r0=0.5, r1=1, ymax=ymax)
 
-      kpAddLabels(kp, labels = bottomLabel, srt=90, pos=3, r0=0, r1=0.5, cex=1.8, label.margin = 0.025)
+      kpAddLabels(kp, labels = bottomLabel, srt=90, pos=3, r0=0, r1=0.5, cex=axisLabelCex, label.margin = axisLabelMargin)
       kpAxis(kp, ymin=0, ymax=ymax, r0=0.5, r1=0)
       kp <- kpPlotManhattan(kp, data=bottomGRanges, r0=0.5, r1=0, ymax=ymax, points.col = "2blues")
     }
   } else {
     if(plotGenes) {
       # three-track Manhattan, plot genes
-      kpAddLabels(kp, labels = thirdLabel, srt=90, pos=3, r0=0.74, r1=1, cex=1.8, label.margin = 0.025)
+      kpAddLabels(kp, labels = thirdLabel, srt=90, pos=3, r0=0.74, r1=1, cex=axisLabelCex, label.margin = axisLabelMargin)
       kpAxis(kp, ymin=0, ymax=ymax, r0=0.74, r1=1)
       kp <- kpPlotManhattan(kp, data=thirdGRanges, r0=0.74, r1=1, ymax=ymax)
 
-      kpAddLabels(kp, labels = topLabel, srt=90, pos=3, r0=0.46, r1=0.72, cex=1.8, label.margin = 0.025)
+      kpAddLabels(kp, labels = topLabel, srt=90, pos=3, r0=0.46, r1=0.72, cex=axisLabelCex, label.margin = axisLabelMargin)
       kpAxis(kp, ymin=0, ymax=ymax, r0=0.46, r1=0.72)
       kp <- kpPlotManhattan(kp, data=topGRanges, r0=0.46, r1=0.72, ymax=ymax)
 
-      kpAddLabels(kp, labels = bottomLabel, srt=90, pos=3, r0=0.2, r1=0.46, cex=1.8, label.margin = 0.025)
+      kpAddLabels(kp, labels = bottomLabel, srt=90, pos=3, r0=0.2, r1=0.46, cex=axisLabelCex, label.margin = axisLabelMargin)
       # Note how r0 and r1 are flipped here for kpAxis and kpPlotManhattan
       kpAxis(kp, ymin=0, ymax=ymax, r0=0.46, r1=0.2)
       kp <- kpPlotManhattan(kp, data=bottomGRanges, r0=0.46, r1=0.2, ymax=ymax, points.col = "2blues")
     } else {
       # Three-track Manhattan
-      kpAddLabels(kp, labels = thirdLabel, srt=90, pos=3, r0=0.68, r1=1, cex=1.8, label.margin = 0.025)
+      kpAddLabels(kp, labels = thirdLabel, srt=90, pos=3, r0=0.68, r1=1, cex=axisLabelCex, label.margin = axisLabelMargin)
       kpAxis(kp, ymin=0, ymax=ymax, r0=0.68, r1=1)
       kp <- kpPlotManhattan(kp, data=thirdGRanges, r0=0.68, r1=1, ymax=ymax)
 
-      kpAddLabels(kp, labels = topLabel, srt=90, pos=3, r0=0.33, r1=0.66, cex=1.8, label.margin = 0.025)
+      kpAddLabels(kp, labels = topLabel, srt=90, pos=3, r0=0.33, r1=0.66, cex=axisLabelCex, label.margin = axisLabelMargin)
       kpAxis(kp, ymin=0, ymax=ymax, r0=0.33, r1=0.66)
       kp <- kpPlotManhattan(kp, data=topGRanges, r0=0.33, r1=0.66, ymax=ymax)
 
-      kpAddLabels(kp, labels = bottomLabel, srt=90, pos=3, r0=0, r1=0.33, cex=1.8, label.margin = 0.025)
+      kpAddLabels(kp, labels = bottomLabel, srt=90, pos=3, r0=0, r1=0.33, cex=axisLabelCex, label.margin = axisLabelMargin)
       # Note how r0 and r1 are flipped here for kpAxis and kpPlotManhattan
       kpAxis(kp, ymin=0, ymax=ymax, r0=0.33, r1=0)
       kp <- kpPlotManhattan(kp, data=bottomGRanges, r0=0.33, r1=0, ymax=ymax, points.col = "2blues")
@@ -112,11 +113,11 @@ backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel
   }
 
   if(plotGenes) {
-    genes.data<-makeGenesDataFromTxDb(karyoplot=kp, txdb=TxDb.Hsapiens.UCSC.hg38.knownGene)
+    genes.data<-makeGenesDataFromTxDb(karyoplot=kp, txdb=TxDb.Hsapiens.UCSC.hg38.knownGene::TxDb.Hsapiens.UCSC.hg38.knownGene)
 
     genes.data<-addGeneNames(genes.data)
     genes.data.merged<-mergeTranscripts(genes.data)
-    kp<-kpPlotGenes(kp, data=genes.data.merged, r0=0, r1=0.2, cex=1.0, gene.name.position='left')
+    kp<-kpPlotGenes(kp, data=genes.data.merged, r0=0, r1=0.2, cex=geneNameCex, gene.name.position='left')
   }
 
   if(!is.null(outputFile)) {
