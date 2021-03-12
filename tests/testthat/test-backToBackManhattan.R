@@ -5,7 +5,6 @@ test_that("Error is thrown when both \'chromosomes\' and \'zoom\' arguments are 
   grangesBottom<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
   expect_error(backToBackManhattan(topGRanges=grangesTop,
                                    bottomGRanges=grangesBottom,
-                                   outputFile='test.png',
                                    topLabel='top',
                                    bottomLabel='bottom',
                                    main='title',
@@ -22,7 +21,6 @@ test_that("Error is thrown for thirdGRanges argument without accompanying thirdL
   grangesThird<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
   expect_error(backToBackManhattan(topGRanges=grangesTop,
                                    bottomGRanges=grangesBottom,
-                                   outputFile='test.png',
                                    topLabel='top',
                                    bottomLabel='bottom',
                                    main='title',
@@ -39,7 +37,6 @@ test_that("Error is thrown for specifying \'plotGenes\' flag without accompanyin
   grangesThird<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
   expect_error(backToBackManhattan(topGRanges=grangesTop,
                                    bottomGRanges=grangesBottom,
-                                   outputFile='test.png',
                                    topLabel='top',
                                    bottomLabel='bottom',
                                    main='title',
@@ -57,7 +54,7 @@ test_that("Whole-genome Manhattan is drawn", {
   pidGRanges <- createGRanges(data.frame(pidDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
   igadGRanges <- createGRanges(data.frame(igadDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
 
-  backToBackManhattan(pidGRanges, igadGRanges, output='test_all.png', topLabel='PID', bottomLabel='IgAD', main='PID and IgAD')
+  backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='PID and IgAD')
 
   expect_equal(2, 1+1)
 })
@@ -72,7 +69,7 @@ test_that("Whole-karyotype Manhattan is drawn when outputFile is NULL", {
   pidGRanges <- createGRanges(data.frame(pidDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
   igadGRanges <- createGRanges(data.frame(igadDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
 
-  backToBackManhattan(pidGRanges, igadGRanges, outputFile=NULL, topLabel='PID', bottomLabel='IgAD', main='PID and IgAD')
+  backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='PID and IgAD')
 
   expect_equal(2, 1+1)
 })
@@ -87,7 +84,7 @@ test_that("Single-chromosome Manhattan is drawn", {
   pidGRanges <- createGRanges(data.frame(pidDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
   igadGRanges <- createGRanges(data.frame(igadDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
 
-  backToBackManhattan(pidGRanges, igadGRanges, output='test_chr6.png', topLabel='PID', bottomLabel='IgAD', main='Chromosome 6', chromosomes='chr6', tickDist=1e7)
+  backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6', chromosomes='chr6', tickDist=1e7)
 
   expect_equal(2, 1+1)
 })
@@ -104,7 +101,7 @@ test_that("Single-chromosome Manhattan with three tracks is drawn", {
   igadGRanges <- createGRanges(data.frame(igadDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
   sleGRanges <- createGRanges(data.frame(sleDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
 
-  backToBackManhattan(pidGRanges, igadGRanges, output='test_chr6_three_track.png', topLabel='PID', bottomLabel='IgAD', thirdLabel = 'SLE', thirdGRanges = sleGRanges, main='Chromosome 6', chromosomes='chr6', tickDist=1e7)
+  backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', thirdLabel = 'SLE', thirdGRanges = sleGRanges, main='Chromosome 6', chromosomes='chr6', tickDist=1e7)
 
   expect_equal(2, 1+1)
 })
@@ -119,7 +116,7 @@ test_that("\'Zoomed\' Manhattan is drawn", {
   pidGRanges <- createGRanges(data.frame(pidDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
   igadGRanges <- createGRanges(data.frame(igadDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
 
-  backToBackManhattan(pidGRanges, igadGRanges, output='test_chr6_zoom.png', topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-36e6', tickDist=1e6)
+  backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-36e6', tickDist=1e6)
 
   expect_equal(2, 1+1)
 })
@@ -134,7 +131,7 @@ test_that("\'Zoomed\' Manhattan is drawn with genes", {
   pidGRanges <- createGRanges(data.frame(pidDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
   igadGRanges <- createGRanges(data.frame(igadDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
 
-  backToBackManhattan(pidGRanges, igadGRanges, output='test_chr6_zoom_genes.png', topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=1e5, plotGenes=T)
+  backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=1e5, plotGenes=T)
 
   expect_equal(2, 1+1)
 })
@@ -152,7 +149,7 @@ test_that("\'Zoomed\' Manhattan with three plots is drawn with genes", {
   igadGRanges <- createGRanges(data.frame(igadDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
   sleGRanges <- createGRanges(data.frame(sleDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
 
-  backToBackManhattan(pidGRanges, igadGRanges, thirdGRanges=sleGRanges, thirdLabel='SLE', output='test_chr6_zoom_genes_three_track.png', topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=1e5, plotGenes=T)
+  backToBackManhattan(pidGRanges, igadGRanges, thirdGRanges=sleGRanges, thirdLabel='SLE', topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=1e5, plotGenes=T)
 
   expect_equal(2, 1+1)
 })

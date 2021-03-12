@@ -9,16 +9,14 @@
 #' @param topLabel Axis label for top Manhattan plot of back-to-back pair
 #' @param bottomLabel Axis label for bottom Manhattan plot of back-to-back pair
 #' @param main Main title
-#' @param outputFile Path to output file. If omitted, plots to the screen device.
-#' @param width Width of plot in pixels for writing to file device
-#' @param height Height of plot in pixels for writing to file device
 #' @param ymax Maximum value for y axis
 #' @param tickDist Distance in basepairs between chromosome diagram ticks
 #' @param axisLabelMargin Size of margin between axis and its label
 #' @param mainTitleCex Scaling factor for main title
 #' @param axisLabelCex Scaling factor for axis label
 #' @param plotGenes Flag to have karyoploteR plot gene structures beneath Manhattan
-#' @param geneNamesCex Scaling factor for gene name labels
+#' @param geneNamesCex Scaling factor for gene labels
+#' @param chromNamesCex Scaling factor for chromosome labels
 #' @param thirdGRanges GenomicRanges object containing data for third plot to be placed above back-to-back Manhattans
 #' @param thirdLabel Axis label for third plot
 #' @param chromosomes List of chromosomes to plot. Expects strings of the form 'chrx' where 'x' is from the set {1, 2, ..., 22, X, Y} 
@@ -29,7 +27,7 @@
 #' @export
 #' 
 #' @examples
-backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel, main, outputFile=NULL, width=1800, height=1000, ymax=15, tickDist=1e5, axisLabelMargin=0.03, mainTitleCex=2.7, axisLabelCex=1.8, plotGenes=F, geneNamesCex=1, thirdGRanges=NULL, thirdLabel=NULL, chromosomes=NULL, zoom=NULL) {
+backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel, main, ymax=15, tickDist=1e5, axisLabelMargin=0.03, mainTitleCex=2.7, axisLabelCex=1.8, plotGenes=F, geneNamesCex=1, chromNamesCex=2, thirdGRanges=NULL, thirdLabel=NULL, chromosomes=NULL, zoom=NULL) {
 
   if(!is.null(chromosomes) & !is.null(zoom)) {
     stop("Cannot specify both \'chromosomes\' and \'zoom\'")
@@ -43,10 +41,6 @@ backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel
     stop("Can only plot gene tracks if \'zoom\' coordinates are specified")
   }
 
-  if(!is.null(outputFile)) {
-    png(outputFile, width=width, height=height)
-  }
-
   if(!is.null(chromosomes)) {
     kp <- plotKaryotype(plot.type=4, labels.plotter=NULL, chromosomes=chromosomes)
     kpAddBaseNumbers(kp, add.units=T, cex=1, tick.dist=tickDist)
@@ -55,7 +49,7 @@ backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel
     kpAddBaseNumbers(kp, add.units=T, cex=1, tick.dist=tickDist)
   } else {
     kp <- plotKaryotype(plot.type=4, labels.plotter=NULL)
-    kpAddChromosomeNames(kp, col='black',srt=90,cex=2)
+    kpAddChromosomeNames(kp, col='black',srt=90,cex=chromNamesCex)
   } 
 
   title(main=main, cex.main= mainTitleCex)
@@ -118,9 +112,5 @@ backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel
     genes.data<-addGeneNames(genes.data)
     genes.data.merged<-mergeTranscripts(genes.data)
     kp<-kpPlotGenes(kp, data=genes.data.merged, r0=0, r1=0.2, cex=geneNameCex, gene.name.position='left')
-  }
-
-  if(!is.null(outputFile)) {
-    dev.off()
   }
 }
