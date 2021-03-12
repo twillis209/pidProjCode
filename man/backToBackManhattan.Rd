@@ -10,12 +10,14 @@ backToBackManhattan(
   topLabel,
   bottomLabel,
   main,
-  outputFile = NULL,
-  width = 1800,
-  height = 1000,
   ymax = 15,
   tickDist = 1e+05,
+  axisLabelMargin = 0.03,
+  mainTitleCex = 2.7,
+  axisLabelCex = 1.8,
   plotGenes = F,
+  geneNamesCex = 1,
+  chromNamesCex = 2,
   thirdGRanges = NULL,
   thirdLabel = NULL,
   chromosomes = NULL,
@@ -33,23 +35,27 @@ backToBackManhattan(
 
 \item{main}{Main title}
 
-\item{outputFile}{Path to output file. If omitted, plots to the screen device.}
-
-\item{width}{Width of plot in pixels for writing to file device}
-
-\item{height}{Height of plot in pixels for writing to file device}
-
 \item{ymax}{Maximum value for y axis}
 
 \item{tickDist}{Distance in basepairs between chromosome diagram ticks}
 
+\item{axisLabelMargin}{Size of margin between axis and its label}
+
+\item{mainTitleCex}{Scaling factor for main title}
+
+\item{axisLabelCex}{Scaling factor for axis label}
+
 \item{plotGenes}{Flag to have karyoploteR plot gene structures beneath Manhattan}
+
+\item{geneNamesCex}{Scaling factor for gene labels}
+
+\item{chromNamesCex}{Scaling factor for chromosome labels}
 
 \item{thirdGRanges}{GenomicRanges object containing data for third plot to be placed above back-to-back Manhattans}
 
 \item{thirdLabel}{Axis label for third plot}
 
-\item{chromosomes}{List of chromosomes to plot. Expects strings of the form 'chrx'.}
+\item{chromosomes}{List of chromosomes to plot. Expects strings of the form 'chrx' where 'x' is from the set {1, 2, ..., 22, X, Y}}
 
 \item{zoom}{Coordinates for interval to magnify. Expects a string of the form 'chrx:a-b' where x is the chromosome number a and b are basepair coordinates.}
 }
@@ -57,5 +63,5 @@ backToBackManhattan(
 Main back-to-back plot can be supplemented with a third plot and with gene structure diagrams.
 }
 \details{
-Requires at least two GenomicRanges objects for the main back-to-back plot. A third can be added on its own as a reference.
+
 }

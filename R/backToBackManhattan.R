@@ -62,6 +62,7 @@ backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel
       kp <- kpPlotManhattan(kp, data=topGRanges, r0=0.6, r1=1, ymax=ymax)
 
       kpAddLabels(kp, labels = bottomLabel, srt=90, pos=3, r0=0.6, r1=0.2, cex=axisLabelCex, label.margin = axisLabelMargin)
+      # Note how r0 and r1 are flipped here for kpAxis and kpPlotManhattan
       kpAxis(kp, ymin=0, ymax=ymax, r0=0.6, r1=0.2)
       kp <- kpPlotManhattan(kp, data=bottomGRanges, r0=0.6, r1=0.2, ymax=ymax, points.col = "2blues")
     } else {
@@ -71,6 +72,7 @@ backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel
       kp <- kpPlotManhattan(kp, data=topGRanges, r0=0.5, r1=1, ymax=ymax)
 
       kpAddLabels(kp, labels = bottomLabel, srt=90, pos=3, r0=0, r1=0.5, cex=axisLabelCex, label.margin = axisLabelMargin)
+      # Note how r0 and r1 are flipped here for kpAxis and kpPlotManhattan
       kpAxis(kp, ymin=0, ymax=ymax, r0=0.5, r1=0)
       kp <- kpPlotManhattan(kp, data=bottomGRanges, r0=0.5, r1=0, ymax=ymax, points.col = "2blues")
     }
