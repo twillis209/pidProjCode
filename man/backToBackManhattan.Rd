@@ -63,5 +63,5 @@ backToBackManhattan(
 Main back-to-back plot can be supplemented with a third plot and with gene structure diagrams.
 }
 \details{
-
+At present we require that the p-value column in a GenomicRanges column be labelled 'P' or 'p'.
 }

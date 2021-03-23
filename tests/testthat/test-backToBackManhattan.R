@@ -44,6 +44,57 @@ test_that("Error is thrown for specifying \'plotGenes\' flag without accompanyin
                'Can only plot gene tracks if \'zoom\' coordinates are specified')
 })
 
+test_that("Error is thrown for omitting p-value column from topGRanges", {
+  set.seed(42)
+  gwasDaf<-data.frame('chr'=1:10, 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
+  grangesTop<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
+  grangesBottom<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
+  # createGRanges doesn't allow one to create an object without a p-value column
+  grangesTop$p<-NULL
+
+  expect_error(backToBackManhattan(topGRanges=grangesTop,
+                                   bottomGRanges=grangesBottom,
+                                   topLabel='top',
+                                   bottomLabel='bottom',
+                                   main='title'),
+               'Need a p-value column labelled \'P\' or \'p\' in topGRanges')
+})
+
+test_that("Error is thrown for omitting p-value column from bottomGRanges", {
+  set.seed(42)
+  gwasDaf<-data.frame('chr'=1:10, 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
+  grangesTop<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
+  grangesBottom<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
+  # createGRanges doesn't allow one to create an object without a p-value column
+  grangesBottom$p<-NULL
+
+  expect_error(backToBackManhattan(topGRanges=grangesTop,
+                                   bottomGRanges=grangesBottom,
+                                   topLabel='top',
+                                   bottomLabel='bottom',
+                                   main='title'),
+               'Need a p-value column labelled \'P\' or \'p\' in bottomGRanges')
+})
+
+test_that("Error is thrown for omitting p-value column from thirdGRanges", {
+  set.seed(42)
+  gwasDaf<-data.frame('chr'=1:10, 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
+  grangesTop<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
+  grangesBottom<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
+  grangesThird<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
+  # createGRanges doesn't allow one to create an object without a p-value column
+  grangesThird$p<-NULL
+
+  expect_error(backToBackManhattan(topGRanges=grangesTop,
+                                   bottomGRanges=grangesBottom,
+                                   thirdGRanges=grangesThird,
+                                   topLabel='top',
+                                   bottomLabel='bottom',
+                                   thirdLabel='ref',
+                                   main='title'),
+               'Need a p-value column labelled \'P\' or \'p\' in thirdGRanges')
+})
+
 test_that("Whole-genome Manhattan is drawn", {
   pidDat <- data.table::fread(file=system.file('extdata', 'pidGwas.tsv.gz', package='pidProjCode', mustWork = T), sep = '\t', header = T)
   igadDat <- data.table::fread(file=system.file('extdata', 'igadGwas.tsv.gz', package='pidProjCode', mustWork = T), sep = '\t', header = T)

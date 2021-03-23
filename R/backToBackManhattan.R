@@ -2,7 +2,7 @@
 #' 
 #' @description Main back-to-back plot can be supplemented with a third plot and with gene structure diagrams.
 #'
-#' @details 
+#' @details At present we require that the p-value column in a GenomicRanges column be labelled 'P' or 'p'.
 #'
 #' @param topGRanges GenomicRanges object containing data for top plot
 #' @param bottomGRanges GenomicRanges object containing data for bottom plot
@@ -24,6 +24,7 @@
 #'
 #' @importFrom karyoploteR plotKaryotype kpAddBaseNumbers kpAddChromosomeNames kpAddLabels kpAxis kpPlotGenes kpPlotManhattan makeGenesDataFromTxDb addGeneNames mergeTranscripts
 #' @importFrom TxDb.Hsapiens.UCSC.hg38.knownGene TxDb.Hsapiens.UCSC.hg38.knownGene
+#' @importFrom GenomicRanges mcols mcols<-
 #' @export
 #' 
 #' @examples
@@ -34,12 +35,25 @@ backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel
   }
 
   if(!is.null(thirdGRanges)) {
-    if(is.null(thirdLabel)) stop("Need to specify \'thirdLabel\' if specifying \'thirdGRanges\'")
+    if(is.null(thirdLabel)) {
+      stop("Need to specify \'thirdLabel\' if specifying \'thirdGRanges\'")
+      }
+    if(!('P' %in% names(mcols(thirdGRanges)) | 'p' %in% names(mcols(thirdGRanges)))) {
+      stop('Need a p-value column labelled \'P\' or \'p\' in thirdGRanges')
+    } 
   }
 
   if(plotGenes & is.null(zoom)) {
     stop("Can only plot gene tracks if \'zoom\' coordinates are specified")
   }
+
+  if(!('P' %in% names(mcols(topGRanges)) | 'p' %in% names(mcols(topGRanges)))) {
+    stop('Need a p-value column labelled \'P\' or \'p\' in topGRanges')
+  }
+
+  if(!('P' %in% names(mcols(bottomGRanges)) | 'p' %in% names(mcols(bottomGRanges)))) {
+    stop('Need a p-value column labelled \'P\' or \'p\' in bottomGRanges')
+  } 
 
   if(!is.null(chromosomes)) {
     kp <- plotKaryotype(plot.type=4, labels.plotter=NULL, chromosomes=chromosomes)
