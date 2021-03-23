@@ -193,6 +193,28 @@ kpAddLabels(kp, labels = 'UC', srt=90, pos=3, r0=at$r0, r1=at$r1, cex=cex.label,
 kpAxis(kp, ymin=0, ymax=ymax, r0=at$r0, r1=at$r1)
 ```
 
+## Adding legends
+
+As discussed [here](https://support.bioconductor.org/p/124328/), legends can be added as usual when working with base graphics.
+
+```{r legendExample}
+
+kp <- plotKaryotype(plot.type=4, labels.plotter=NULL, zoom="chr6:25e6-36e6")
+kpAddBaseNumbers(kp, add.units=T, cex=cex.tick, tick.dist=1e6)
+
+
+title(main='IgAD and PID GWAS, chr6:25M-36M', cex.main=cex.main)
+
+kpAddLabels(kp, labels = "IgAD", srt=90, pos=3, r0=0.7, r1=1, cex=cex.label, label.margin = 0.025)
+kpAxis(kp, ymin=0, ymax=40, r0=0.5)
+kp <- kpPlotManhattan(kp, data=igadGRanges, r0=0.5, r1=1, ymax=40)
+kpAddLabels(kp, labels = "PID", srt=90, pos=3, r0=0, r1=0.3, cex=cex.label, label.margin = 0.025)
+kpAxis(kp, ymin=0, ymax=10, r0=0.5, r1=0)
+kp <- kpPlotManhattan(kp, data=pidGRanges, r0=0.5, r1=0, ymax=10, points.col = "2blues")
+
+legend(x = "topright", fill = c("#6caeff", "#2b5d9b"), legend = c("IgAD", "PID"))
+```
+
 ## Using `backToBackManhattan`
 
 I have written a convenience function for drawing 'back-to-back' Manhattan plots with `karyoploteR`, `backToBackManhattan`. These plots allow one to compare results from two GWAS. The function itself does nothing clever and was written merely to save my having to copy and tweak the same boilerplate plotting code over and over.
@@ -206,27 +228,26 @@ With `backToBackManhattan` one can draw:
 
 In addition, the `plotGenes` flag has `karyoploteR` draw gene structures on the lowermost track. At the moment this works only when the `zoom` argument is specified because it takes a long time to draw the genes and the larger the interval, the longer the plotting time. Varying the size of the interval in on which you have `zoom`ed should give you a sense of what is a sensible interval with respect to plotting time. Longer intervals also lead to the gene track getting rather busy, which is no help if you are trying to pick out the genes in which your SNPs of interest lie.
 
-
 ```{r wholeGenomeManhattan}
-backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='PID and IgAD')
+backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='PID and IgAD', axisLabelCex=1, axisLabelMargin=0.04)
 ```
 
 ```{r singleChromosomeManhattan}
-backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6', chromosomes='chr6', tickDist=1e7)
+backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6', chromosomes='chr6', tickDist=1e7, axisLabelCex=1, axisLabelMargin=0.04)
 ```
 
 ```{r singleChromosomeThreeTracksManhattan}
-backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', thirdLabel = 'SLE', thirdGRanges = sleGRanges, main='Chromosome 6', chromosomes='chr6', tickDist=1e7)
+backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', thirdLabel = 'SLE', thirdGRanges = sleGRanges, main='Chromosome 6', chromosomes='chr6', tickDist=1e7, axisLabelCex=1, axisLabelMargin=0.04)
 ```
 
-```{r zoomedManhattan}
-backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-36e6', tickDist=1e6)
+```{r zoomedManhattanBackToBack}
+backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-36e6', tickDist=1e6, axisLabelCex=1, axisLabelMargin=0.04)
 ```
 
 ```{r zoomedManhattanWithGenes}
-backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=1e5, plotGenes=T)
+backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=1e5, plotGenes=T, axisLabelCex=1, axisLabelMargin=0.04)
 ```
 
 ```{r zoomedManhattanWithThreeTracksAndGenes}
-backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', thirdGRanges=sleGRanges, thirdLabel='SLE', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=1e5, plotGenes=T)
+backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', thirdGRanges=sleGRanges, thirdLabel='SLE', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=1e5, plotGenes=T, axisLabelCex=1, axisLabelMargin=0.04)
 ```
