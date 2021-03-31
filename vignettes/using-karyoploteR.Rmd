@@ -1,8 +1,8 @@
 ---
-title: "Using createGRanges with karyoploteR"
+title: "Some karyoploteR use cases"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Using createGRanges with karyoploteR}
+  %\VignetteIndexEntry{Some karyoploteR use cases}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -28,36 +28,40 @@ library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 As sample data sets we use subsets of four GWAS: one of selective IgA deficiency by Bronson et al. (2016),  another of primary immunodeficiency by Thaventhiran et al. (2020), a third of systemic lupus erythematosus by Bentham et al. (2015), and a fourth of ulcerative colitis by de Lange et al. (2017). These contain only SNPs on chromosome 6 from 25Mb to 36Mb (this interval includes the MHC locus).
 
 ```{r loadExampleData}
-igadDat <- fread(file=system.file('extdata', 'igadGwas.tsv.gz', package='pidProjCode', mustWork=T), sep='\t', header=T, select=c('SNPID','CHR38','BP38','P'))
-pidDat <- fread(file=system.file('extdata', 'pidGwas.tsv.gz', package='pidProjCode', mustWork=T), sep='\t', header=T, select=c('SNPID','CHR38','BP38','P'))
-sleDat <- fread(file=system.file('extdata', 'sleGwas.tsv.gz', package='pidProjCode', mustWork=T), sep='\t', header=T, select=c('SNPID','CHR38','BP38','P'))
-ucDat <- fread(file=system.file('extdata', 'ucGwas.tsv.gz', package='pidProjCode', mustWork=T), sep='\t', header=T, select=c('SNPID','CHR38','BP38','P'))
+igadDat <- fread(file = system.file('extdata', 'igadGwas.tsv.gz', package = 'pidProjCode', mustWork = T), sep = '\t', header = T, select = c('SNPID','CHR38','BP38','P'))
+pidDat <- fread(file = system.file('extdata', 'pidGwas.tsv.gz', package = 'pidProjCode', mustWork = T), sep = '\t', header = T, select = c('SNPID','CHR38','BP38','P'))
+sleDat <- fread(file = system.file('extdata', 'sleGwas.tsv.gz', package = 'pidProjCode', mustWork = T), sep = '\t', header = T, select = c('SNPID','CHR38','BP38','P'))
+ucDat <- fread(file = system.file('extdata', 'ucGwas.tsv.gz', package = 'pidProjCode', mustWork = T), sep = '\t', header = T, select = c('SNPID','CHR38','BP38','P'))
 
 # ymax doesn't seem to work for me with karyoploteR
 igadDat <- igadDat[-log10(P) < 15]
 pidDat <- pidDat[-log10(P) < 15]
 sleDat <- sleDat[-log10(P) < 15]
 ucDat <- ucDat[-log10(P) < 15]
+
+# GenomicRanges require that chromosome seqnames have the prefix 'chr'
+igadDat[ , CHR38 := paste0('chr', CHR38)]
+pidDat[ , CHR38 := paste0('chr', CHR38)]
+sleDat[ , CHR38 := paste0('chr', CHR38)]
+ucDat[ , CHR38 := paste0('chr', CHR38)]
+
 ```
 
-The first obstacle to getting `karyoploteR` working was getting GWAS data into a `GenomicRanges` object. I found the function `cpvSnp::createArrayData` which achieved this and wrote `createGRanges` as a stripped-down version of it. 
+`karyoploteR` requires you pass genomic data in the form `GenomicRanges` objects. The `GenomicRanges` package provides the `makeGRangesFromDataFrame` function to do this. (Note that the whole point of this vignette was to explain how to use my own `createGRanges` function but that has since been obviated by my discovery that use of `makeGRangesFromDataFrame` is more straightforward than originally thought.)
 
-To create a `GenomicRanges` object, we need to specify the data and the names of the columns giving the chromosome and basepair coordinates. Any other columns will be kicked into the metadata. As written, `createGRanges` cannot take a `data.table` object so we need to convert `igadDat` to a `data.frame` first.
-
-A useful feature of `karyoploteR` is the highlighting of specified SNPs. These need to be given in a `GenomicRanges` object, too, so we create `topSnpGRanges` to hold these (in this case just a single SNP). For a Manhattan plot we want a y axis on the negative log10 scale, but `karyoploteR` doesn't seem to heed this for highlighted SNPs, so we specify the y coordinate as an extra metadata column in the `GenomicRanges` object
+A useful feature of `karyoploteR` is the highlighting of specified SNPs. These need to be given in a `GenomicRanges` object, too, so we create `topSnpGRanges` to hold these (in this case just a single SNP). For a Manhattan plot we want a y axis on the negative log10 scale, but `karyoploteR::kpPoints` doesn't seem to heed this rescaling, so we specify the y coordinate as an extra metadata column in the `GenomicRanges` object
 
 ```{r creatingGRangesObjects}
-igadGRanges <- createGRanges(data.frame(igadDat), bpCol='BP38', chrCol='CHR38')
-pidGRanges <- createGRanges(data.frame(pidDat), bpCol='BP38', chrCol='CHR38')
-sleGRanges <- createGRanges(data.frame(sleDat), bpCol='BP38', chrCol='CHR38')
-ucGRanges <- createGRanges(data.frame(ucDat), bpCol='BP38', chrCol='CHR38')
+igadGRanges <- makeGRangesFromDataFrame(data.frame(igadDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
+pidGRanges <- makeGRangesFromDataFrame(data.frame(pidDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
+sleGRanges <- makeGRangesFromDataFrame(data.frame(sleDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
+ucGRanges <- makeGRangesFromDataFrame(data.frame(ucDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
 
 topSnps <- c('rs116540075')
 
-topSnpGRanges <- createGRanges(data.frame(igadDat[SNPID %in% topSnps][, y:= -log10(P)]), bpCol='BP38', chrCol='CHR38')
-```
+topSnpGRanges <- makeGRangesFromDataFrame(data.frame(igadDat[SNPID %in% topSnps][, y:= -log10(P)]), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
 
-`createGRanges` is the only function from this package (`pidProjCode`) called in this vignette. The rest come from `karyoploteR` or its imports.
+```
 
 The first reference for use of `karyoploteR` should be the docs themselves. In particular, I relied on the author's [Manhattan tutorial](https://bernatgel.github.io/karyoploter_tutorial//Tutorial/PlotManhattan/PlotManhattan.html) but some of the details are now outdated, such as its use of the annotations from the `hg19` draft genome. Look at that page first to see the full array of Manhattan plot functionality offered by this package.
 
