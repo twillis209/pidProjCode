@@ -1,8 +1,9 @@
 test_that("Error is thrown when both \'chromosomes\' and \'zoom\' arguments are specified", {
   set.seed(42)
-  gwasDaf<-data.frame('chr'=1:10, 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
-  grangesTop<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
-  grangesBottom<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
+  gwasDaf <- data.frame('chr'=paste0('chr', 1:10), 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
+  grangesTop <- makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
+  grangesBottom <- makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
+
   expect_error(backToBackManhattan(topGRanges=grangesTop,
                                    bottomGRanges=grangesBottom,
                                    topLabel='top',
@@ -15,10 +16,11 @@ test_that("Error is thrown when both \'chromosomes\' and \'zoom\' arguments are 
 
 test_that("Error is thrown for thirdGRanges argument without accompanying thirdLabel argument", {
   set.seed(42)
-  gwasDaf<-data.frame('chr'=1:10, 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
-  grangesTop<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
-  grangesBottom<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
-  grangesThird<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
+  gwasDaf <- data.frame('chr'=paste0('chr', 1:10), 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
+  grangesTop <- makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
+  grangesBottom <- makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
+  grangesThird <- makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
+
   expect_error(backToBackManhattan(topGRanges=grangesTop,
                                    bottomGRanges=grangesBottom,
                                    topLabel='top',
@@ -31,10 +33,12 @@ test_that("Error is thrown for thirdGRanges argument without accompanying thirdL
 
 test_that("Error is thrown for specifying \'plotGenes\' flag without accompanying \'zoom\' argument", {
   set.seed(42)
-  gwasDaf<-data.frame('chr'=1:10, 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
-  grangesTop<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
-  grangesBottom<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
-  grangesThird<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
+  gwasDaf <- data.frame('chr'=paste0('chr', 1:10), 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
+
+  grangesTop <- makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
+  grangesBottom <- makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
+  grangesThird <- makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
+
   expect_error(backToBackManhattan(topGRanges=grangesTop,
                                    bottomGRanges=grangesBottom,
                                    topLabel='top',
@@ -46,11 +50,10 @@ test_that("Error is thrown for specifying \'plotGenes\' flag without accompanyin
 
 test_that("Error is thrown for omitting p-value column from topGRanges", {
   set.seed(42)
-  gwasDaf<-data.frame('chr'=1:10, 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
-  grangesTop<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
-  grangesBottom<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
-  # createGRanges doesn't allow one to create an object without a p-value column
-  grangesTop$p<-NULL
+  gwasDaf <- data.frame('chr'=paste0('chr', 1:10), 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
+  grangesTop <- makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
+  grangesBottom <- makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
+  grangesTop$p <- NULL
 
   expect_error(backToBackManhattan(topGRanges=grangesTop,
                                    bottomGRanges=grangesBottom,
@@ -62,11 +65,11 @@ test_that("Error is thrown for omitting p-value column from topGRanges", {
 
 test_that("Error is thrown for omitting p-value column from bottomGRanges", {
   set.seed(42)
-  gwasDaf<-data.frame('chr'=1:10, 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
-  grangesTop<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
-  grangesBottom<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
-  # createGRanges doesn't allow one to create an object without a p-value column
-  grangesBottom$p<-NULL
+  gwasDaf <- data.frame('chr'=paste0('chr', 1:10), 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
+
+  grangesTop <- makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
+  grangesBottom <- makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
+  grangesBottom$p <- NULL
 
   expect_error(backToBackManhattan(topGRanges=grangesTop,
                                    bottomGRanges=grangesBottom,
@@ -78,12 +81,12 @@ test_that("Error is thrown for omitting p-value column from bottomGRanges", {
 
 test_that("Error is thrown for omitting p-value column from thirdGRanges", {
   set.seed(42)
-  gwasDaf<-data.frame('chr'=1:10, 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
-  grangesTop<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
-  grangesBottom<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
-  grangesThird<-createGRanges(gwasDaf, chrCol='chr', bpCol='bp')
-  # createGRanges doesn't allow one to create an object without a p-value column
-  grangesThird$p<-NULL
+  gwasDaf <- data.frame('chr'=paste0('chr', 1:10), 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
+
+  grangesTop <- makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
+  grangesBottom <- makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
+  grangesThird <- makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
+  grangesThird$p <- NULL
 
   expect_error(backToBackManhattan(topGRanges=grangesTop,
                                    bottomGRanges=grangesBottom,
@@ -102,8 +105,11 @@ test_that("Whole-genome Manhattan is drawn", {
   pidDat <- subset(pidDat, -log10(P) < 15)
   igadDat <- subset(igadDat, -log10(P) < 15)
 
-  pidGRanges <- createGRanges(data.frame(pidDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
-  igadGRanges <- createGRanges(data.frame(igadDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
+  pidDat[, CHR38 := paste0('chr', CHR38)]
+  igadDat[, CHR38 := paste0('chr', CHR38)]
+
+  pidGRanges <- makeGRangesFromDataFrame(data.frame(pidDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
+  igadGRanges <- makeGRangesFromDataFrame(data.frame(igadDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
 
   backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='PID and IgAD')
 
@@ -117,8 +123,11 @@ test_that("Whole-karyotype Manhattan is drawn when outputFile is NULL", {
   pidDat <- subset(pidDat, -log10(P) < 15)
   igadDat <- subset(igadDat, -log10(P) < 15)
 
-  pidGRanges <- createGRanges(data.frame(pidDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
-  igadGRanges <- createGRanges(data.frame(igadDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
+  pidDat[, CHR38 := paste0('chr', CHR38)]
+  igadDat[, CHR38 := paste0('chr', CHR38)]
+
+  pidGRanges <- makeGRangesFromDataFrame(data.frame(pidDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
+  igadGRanges <- makeGRangesFromDataFrame(data.frame(igadDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
 
   backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='PID and IgAD')
 
@@ -132,8 +141,11 @@ test_that("Single-chromosome Manhattan is drawn", {
   pidDat <- subset(pidDat, -log10(P) < 15)
   igadDat <- subset(igadDat, -log10(P) < 15)
 
-  pidGRanges <- createGRanges(data.frame(pidDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
-  igadGRanges <- createGRanges(data.frame(igadDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
+  pidDat[, CHR38 := paste0('chr', CHR38)]
+  igadDat[, CHR38 := paste0('chr', CHR38)]
+
+  pidGRanges <- makeGRangesFromDataFrame(data.frame(pidDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
+  igadGRanges <- makeGRangesFromDataFrame(data.frame(igadDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
 
   backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6', chromosomes='chr6', tickDist=1e7)
 
@@ -146,11 +158,16 @@ test_that("Single-chromosome Manhattan with three tracks is drawn", {
   sleDat <- data.table::fread(file=system.file('extdata', 'sleGwas.tsv.gz', package='pidProjCode', mustWork = T), sep = '\t', header = T)
 
   pidDat <- subset(pidDat, -log10(P) < 15)
-  igadDat <- subset(sleDat, -log10(P) < 15)
+  igadDat <- subset(igadDat, -log10(P) < 15)
+  sleDat <- subset(sleDat, -log10(P) < 15)
 
-  pidGRanges <- createGRanges(data.frame(pidDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
-  igadGRanges <- createGRanges(data.frame(igadDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
-  sleGRanges <- createGRanges(data.frame(sleDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
+  pidDat[, CHR38 := paste0('chr', CHR38)]
+  igadDat[, CHR38 := paste0('chr', CHR38)]
+  sleDat[, CHR38 := paste0('chr', CHR38)]
+
+  pidGRanges <- makeGRangesFromDataFrame(data.frame(pidDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
+  igadGRanges <- makeGRangesFromDataFrame(data.frame(igadDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
+  sleGRanges <- makeGRangesFromDataFrame(data.frame(sleDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
 
   backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', thirdLabel = 'SLE', thirdGRanges = sleGRanges, main='Chromosome 6', chromosomes='chr6', tickDist=1e7)
 
@@ -164,8 +181,11 @@ test_that("\'Zoomed\' Manhattan is drawn", {
   pidDat <- subset(pidDat, -log10(P) < 15)
   igadDat <- subset(igadDat, -log10(P) < 15)
 
-  pidGRanges <- createGRanges(data.frame(pidDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
-  igadGRanges <- createGRanges(data.frame(igadDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
+  pidDat[, CHR38 := paste0('chr', CHR38)]
+  igadDat[, CHR38 := paste0('chr', CHR38)]
+
+  pidGRanges <- makeGRangesFromDataFrame(data.frame(pidDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
+  igadGRanges <- makeGRangesFromDataFrame(data.frame(igadDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
 
   backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-36e6', tickDist=1e6)
 
@@ -179,8 +199,11 @@ test_that("\'Zoomed\' Manhattan is drawn with genes", {
   pidDat <- subset(pidDat, -log10(P) < 15)
   igadDat <- subset(igadDat, -log10(P) < 15)
 
-  pidGRanges <- createGRanges(data.frame(pidDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
-  igadGRanges <- createGRanges(data.frame(igadDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
+  pidDat[, CHR38 := paste0('chr', CHR38)]
+  igadDat[, CHR38 := paste0('chr', CHR38)]
+
+  pidGRanges <- makeGRangesFromDataFrame(data.frame(pidDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
+  igadGRanges <- makeGRangesFromDataFrame(data.frame(igadDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
 
   backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=1e5, plotGenes=T)
 
@@ -196,9 +219,13 @@ test_that("\'Zoomed\' Manhattan with three plots is drawn with genes", {
   igadDat <- subset(igadDat, -log10(P) < 15)
   sleDat <- subset(sleDat, -log10(P) < 15)
 
-  pidGRanges <- createGRanges(data.frame(pidDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
-  igadGRanges <- createGRanges(data.frame(igadDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
-  sleGRanges <- createGRanges(data.frame(sleDat), chrCol='CHR38', bpCol='BP38', nameCol='SNPID')
+  pidDat[, CHR38 := paste0('chr', CHR38)]
+  igadDat[, CHR38 := paste0('chr', CHR38)]
+  sleDat[, CHR38 := paste0('chr', CHR38)]
+
+  pidGRanges <- makeGRangesFromDataFrame(data.frame(pidDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
+  igadGRanges <- makeGRangesFromDataFrame(data.frame(igadDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
+  sleGRanges <- makeGRangesFromDataFrame(data.frame(sleDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
 
   backToBackManhattan(pidGRanges, igadGRanges, thirdGRanges=sleGRanges, thirdLabel='SLE', topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=1e5, plotGenes=T)
 

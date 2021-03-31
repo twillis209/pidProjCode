@@ -21,7 +21,8 @@ backToBackManhattan(
   thirdGRanges = NULL,
   thirdLabel = NULL,
   chromosomes = NULL,
-  zoom = NULL
+  zoom = NULL,
+  plotParams = getDefaultPlotParams(plot.type = 4)
 )
 }
 \arguments{
@@ -58,6 +59,8 @@ backToBackManhattan(
 \item{chromosomes}{List of chromosomes to plot. Expects strings of the form 'chrx' where 'x' is from the set {1, 2, ..., 22, X, Y}}
 
 \item{zoom}{Coordinates for interval to magnify. Expects a string of the form 'chrx:a-b' where x is the chromosome number a and b are basepair coordinates.}
+
+\item{plotParams}{List of named plot parameters to pass to \code{plotKaryotype}}
 }
 \description{
 Main back-to-back plot can be supplemented with a third plot and with gene structure diagrams.

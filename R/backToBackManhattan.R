@@ -21,14 +21,15 @@
 #' @param thirdLabel Axis label for third plot
 #' @param chromosomes List of chromosomes to plot. Expects strings of the form 'chrx' where 'x' is from the set {1, 2, ..., 22, X, Y} 
 #' @param zoom Coordinates for interval to magnify. Expects a string of the form 'chrx:a-b' where x is the chromosome number a and b are basepair coordinates.
+#' @param plotParams List of named plot parameters to pass to \code{plotKaryotype}
 #'
-#' @importFrom karyoploteR plotKaryotype kpAddBaseNumbers kpAddChromosomeNames kpAddLabels kpAxis kpPlotGenes kpPlotManhattan makeGenesDataFromTxDb addGeneNames mergeTranscripts
+#' @importFrom karyoploteR plotKaryotype kpAddBaseNumbers kpAddChromosomeNames kpAddLabels kpAxis kpPlotGenes kpPlotManhattan makeGenesDataFromTxDb addGeneNames mergeTranscripts getDefaultPlotParams
 #' @importFrom TxDb.Hsapiens.UCSC.hg38.knownGene TxDb.Hsapiens.UCSC.hg38.knownGene
 #' @importFrom GenomicRanges mcols mcols<-
 #' @export
 #' 
 #' @examples
-backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel, main, ymax=15, tickDist=1e5, axisLabelMargin=0.03, mainTitleCex=2.7, axisLabelCex=1.8, plotGenes=F, geneNamesCex=1, chromNamesCex=2, thirdGRanges=NULL, thirdLabel=NULL, chromosomes=NULL, zoom=NULL) {
+backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel, main, ymax = 15, tickDist = 1e5, axisLabelMargin = 0.03, mainTitleCex = 2.7, axisLabelCex = 1.8, plotGenes = F, geneNamesCex = 1, chromNamesCex = 2, thirdGRanges = NULL, thirdLabel = NULL, chromosomes = NULL, zoom = NULL, plotParams = getDefaultPlotParams(plot.type = 4)) {
 
   if(!is.null(chromosomes) & !is.null(zoom)) {
     stop("Cannot specify both \'chromosomes\' and \'zoom\'")
@@ -56,7 +57,7 @@ backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel
   } 
 
   if(!is.null(chromosomes)) {
-    kp <- plotKaryotype(plot.type=4, labels.plotter=NULL, chromosomes=chromosomes)
+    kp <- plotKaryotype(plot.type=4, labels.plotter=NULL, chromosomes=chromosomes, plot.params = plotParams)
     kpAddBaseNumbers(kp, add.units=T, cex=1, tick.dist=tickDist)
   } else if(!is.null(zoom)) {
     kp <- plotKaryotype(plot.type=4, labels.plotter=NULL, zoom=zoom)
