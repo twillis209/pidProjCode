@@ -18,6 +18,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+NB: I originally wrote this to showcase the use of `karyoploteR` with a function of my own, `createGRanges`. I've since removed this from my package, `pidProjCode`, as I discovered `GenomicRanges` provides a perfectly serviceable function of its own to this end, `makeGRangesFromDataFrame`. This vignette now serves to illustrate use of `karyoploteR` in a GWAS setting, in particular when working with sets of summary statistics. It also depicts the use of some convenience functions I have gathered together in `pidProjCode`. Installing what was only meant to be a toy package would be silly, though, so I encourage anyone who thinks a function like `backToBackManhattan` could be useful to simply copy
+[the source code from my package's GitHub repo.](https://github.com/twillis209/pidProjCode)
+
+
 ```{r setup}
 library(pidProjCode)
 library(GenomicRanges)
@@ -26,7 +30,8 @@ library(data.table)
 library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 ```
 
-As sample data sets we use subsets of four GWAS: one of selective IgA deficiency by Bronson et al. (2016),  another of primary immunodeficiency by Thaventhiran et al. (2020), a third of systemic lupus erythematosus by Bentham et al. (2015), and a fourth of ulcerative colitis by de Lange et al. (2017). These contain only SNPs on chromosome 6 from 25Mb to 36Mb (this interval includes the MHC locus).
+
+As sample data sets we use subsets of four sets of GWAS summary statistics: one of selective IgA deficiency by Bronson et al. (2016),  another of antibody-deficient primary immunodeficiency by Thaventhiran et al. (2020), a third of systemic lupus erythematosus by Bentham et al. (2015), and a fourth of ulcerative colitis by de Lange et al. (2017). These contain only SNPs on chromosome 6 from 25Mb to 36Mb (this interval includes the MHC locus).
 
 ```{r loadExampleData}
 igadDat <- fread(file = system.file('extdata', 'igadGwas.tsv.gz', package = 'pidProjCode', mustWork = T), sep = '\t', header = T, select = c('SNPID','CHR38','BP38','P'))
@@ -42,9 +47,9 @@ ucDat[ , CHR38 := paste0('chr', CHR38)]
 
 ```
 
-`karyoploteR` requires you pass genomic data in the form `GenomicRanges` objects. The `GenomicRanges` package provides the `makeGRangesFromDataFrame` function to do this. (Note that the whole point of this vignette was to explain how to use my own `createGRanges` function but that has since been obviated by my discovery that use of `makeGRangesFromDataFrame` is more straightforward than originally thought.)
+`karyoploteR` requires you pass it genomic data in the form of `GenomicRanges` objects. The `GenomicRanges` package provides the `makeGRangesFromDataFrame` function to do this.
 
-A useful feature of `karyoploteR` is the highlighting of specified SNPs. These need to be given in a `GenomicRanges` object, too, so we create `topSnpGRanges` to hold these (in this case just a single SNP). For a Manhattan plot we want a y axis on the negative log10 scale, but `karyoploteR::kpPoints` doesn't seem to heed this rescaling, so we specify the y coordinate as an extra metadata column in the `GenomicRanges` object
+A useful feature of `karyoploteR` is the highlighting of specified SNPs. These need to be given in a `GenomicRanges` object, too, so we create `topSnpGRanges` to hold these (in this case just a single SNP). For a Manhattan plot we want a y axis on the negative log10 scale, but `karyoploteR::kpPoints` doesn't seem to respect this rescaling, so we specify the y coordinate as an extra metadata column in the `GenomicRanges` object
 
 ```{r creatingGRangesObjects}
 igadGRanges <- makeGRangesFromDataFrame(data.frame(igadDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
@@ -60,7 +65,7 @@ topSnpGRanges <- makeGRangesFromDataFrame(data.frame(igadDat[SNPID %in% topSnps]
 
 The first reference for use of `karyoploteR` should be the docs themselves. In particular, I relied on the author's [Manhattan tutorial](https://bernatgel.github.io/karyoploter_tutorial//Tutorial/PlotManhattan/PlotManhattan.html) but some of the details are now outdated, such as its use of the annotations from the `hg19` draft genome. Look at that page first to see the full array of Manhattan plot functionality offered by this package.
 
-I spent some hours muddling through the process of adapting the examples given in the tutorial to my own use case. I hope this short vignette serves to motivate the use of the `createGRanges` function ([the source code for which you can just copy from my package's GitHub repo](https://github.com/twillis209/pidProjCode/blob/master/R/createGRanges.R)) and to provide two examples to copy and adapt for the 'zoomed-in Manhattan plot' use case. Copying my code rather than that in the tutorial should hopefully spare you some of the trouble I went through getting the latter to work.
+I spent some hours muddling through the process of adapting the examples given in the tutorial to my own use case. Copying my code here rather than that in the tutorial should hopefully spare you some of the trouble I went through getting the tutorial code to work.
 
 ```{r manhattan}
 ymax <- 137
@@ -101,7 +106,7 @@ genes.data <- makeGenesDataFromTxDb(karyoplot = kp, txdb = TxDb.Hsapiens.UCSC.hg
 
 genes.data <- addGeneNames(genes.data)
 genes.data.merged <- mergeTranscripts(genes.data)
-kp <- kpPlotGenes(kp, data = genes.data.merged, r0 = 0, r1 = 0.2, cex = 0.8, gene.name.position = 'left')
+kp <- kpPlotGenes(kp, data = genes.data.merged, r0 = 0, r1 = 0.2, gene.name.cex = 0.8, gene.name.position = 'left')
 ```
 
 ```{r backToBackManhattans}
@@ -130,7 +135,7 @@ cex.label <- 1
 ymax <- 10
 label.margin <- 0.05
 # The % of the total plotting space to leave in each margin between the tracks
-autotrack.margin <- 0.14
+autotrack.margin <- 0.18
 
 kp <- plotKaryotype(plot.type = 4, labels.plotter = NULL, zoom = "chr6:25e6-36e6", plot.params = pp)
 kpAddBaseNumbers(kp, add.units = T, cex = cex.tick, tick.dist = 1e6)
@@ -217,7 +222,7 @@ legend(x = "topright", fill = c("#6caeff", "#2b5d9b"), legend = c("IgAD", "PID")
 
 ## Using `backToBackManhattan`
 
-I have written a convenience function for drawing 'back-to-back' Manhattan plots with `karyoploteR`, `backToBackManhattan`. These plots allow one to compare results from two GWAS. The function itself does nothing clever and was written merely to save my having to copy and tweak the same boilerplate plotting code over and over.
+I have written a convenience function, `backToBackManhattan`, for drawing 'back-to-back' Manhattan plots with `karyoploteR`. These plots allow one to compare results from two GWAS. The function itself does nothing clever and was written merely to save my having to copy and tweak the same boilerplate plotting code over and over.
 
 In my own work I have had cause to plot (transformed) GWAS results in this manner in order to assess two competing conditional FDR methods, `cfdr` and `fcfdr`. These condition p-values for the association of SNPs with a principal trait upon p-values for the association of the same SNPs with some informative auxiliary trait, and produce p-value-like 'v-values'. In this use case, it can be useful to have to hand the original principal trait p-values, so `backToBackManhattan` allows one to specify a third Manhattan.
 
@@ -226,36 +231,42 @@ With `backToBackManhattan` one can draw:
 - results from a selection of chromosomes (see the `chromosomes` argument)
 - a Manhattan which magnifies an interval on a single chromosome (see the `zoom` argument)
 
-In addition, the `plotGenes` flag has `karyoploteR` draw gene structures on the lowermost track. At the moment this works only when the `zoom` argument is specified because it takes a long time to draw the genes and the larger the interval, the longer the plotting time. Varying the size of the interval in on which you have `zoom`ed should give you a sense of what is a sensible interval with respect to plotting time. Longer intervals also lead to the gene track getting rather busy, which is no help if you are trying to pick out the genes in which your SNPs of interest lie.
+In addition, the `plotGenes` flag has `karyoploteR` draw gene structures on the lowermost track. At the moment this works only when the `zoom` argument is specified because it takes a long time to draw the genes and the larger the interval, the longer the plotting time. Varying the size of the interval in on which you have `zoom`ed should give you a sense of what is a sensible interval. Longer intervals also lead to the gene track getting rather busy, which is no help if you are trying to pick out the genes in which your SNPs of interest lie.
 
-```{r wholeGenomeManhattan, fig.width = 9}
+```{r wholeGenomeManhattan, fig.width = 7}
 
-label.margin <- 0.08
+label.margin <- 0.07
+
+chrom.names.cex <- 0.9
+
+pp <- getDefaultPlotParams(plot.type = 4)
 
 pp$leftmargin <- 0.1
 pp$rightmargin <- 0.1
 
-chrom.names.cex <- 0.9
+# Can't get ymax to work atm
+igadGRanges <- subset(igadGRanges, P > 1e-15)
+sleGRanges <- subset(sleGRanges, P > 1e-15)
 
-backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='PID and IgAD', axisLabelCex=1, axisLabelMargin=label.margin, mainTitleCex = cex.main, plotParams = pp, chromNamesCex = chrom.names.cex)
+backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='PID and IgAD', axisLabelCex=1, axisLabelMargin = label.margin, mainTitleCex = cex.main, plotParams = pp, chromNamesCex = chrom.names.cex, ymax = 15)
 ```
 
 ```{r singleChromosomeManhattan}
-backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6', chromosomes='chr6', tickDist=3e7, axisLabelCex=1, axisLabelMargin=label.margin, mainTitleCex = cex.main, plotParams = pp)
+backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6', chromosomes='chr6', tickDist=5e7, axisLabelCex=1, axisLabelMargin = label.margin, mainTitleCex = cex.main, plotParams = pp)
 ```
 
 ```{r singleChromosomeThreeTracksManhattan}
-backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', thirdLabel = 'SLE', thirdGRanges = sleGRanges, main='Chromosome 6', chromosomes='chr6', tickDist=3e7, axisLabelCex=1, axisLabelMargin=label.margin, mainTitleCex = cex.main, plotParams = pp)
+backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', thirdLabel = 'SLE', thirdGRanges = sleGRanges, main='Chromosome 6', chromosomes='chr6', tickDist=3e7, axisLabelCex=1, axisLabelMargin = label.margin, mainTitleCex = cex.main, plotParams = pp)
 ```
 
 ```{r zoomedManhattanBackToBack}
-backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-36e6', tickDist=1e6, axisLabelCex=1, axisLabelMargin=label.margin, mainTitleCex = cex.main, plotParams = pp)
+backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-36e6', tickDist=2e6, axisLabelCex=1, axisLabelMargin= label.margin, mainTitleCex = cex.main, plotParams = pp)
 ```
 
 ```{r zoomedManhattanWithGenes}
-backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=1e5, plotGenes=T, axisLabelCex=1, axisLabelMargin=label.margin, mainTitleCex = cex.main, plotParams = pp, geneNamesCex = 0.7)
+backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=2e5, plotGenes=T, axisLabelCex=1, axisLabelMargin = label.margin, mainTitleCex = cex.main, plotParams = pp, geneNamesCex = 0.7)
 ```
 
 ```{r zoomedManhattanWithThreeTracksAndGenes}
-backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', thirdGRanges=sleGRanges, thirdLabel='SLE', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=1e5, plotGenes=T, axisLabelCex=1, axisLabelMargin=label.margin, mainTitleCex = cex.main, plotParams = pp, geneNamesCex = 0.7)
+backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', thirdGRanges=sleGRanges, thirdLabel='SLE', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=2e5, plotGenes=T, axisLabelCex=1, axisLabelMargin=label.margin, mainTitleCex = cex.main, plotParams = pp, geneNamesCex = 0.7)
 ```

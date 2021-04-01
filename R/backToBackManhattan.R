@@ -57,23 +57,23 @@ backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel
   } 
 
   if(!is.null(chromosomes)) {
-    kp <- plotKaryotype(plot.type=4, labels.plotter=NULL, chromosomes=chromosomes, plot.params = plotParams)
-    kpAddBaseNumbers(kp, add.units=T, cex=1, tick.dist=tickDist)
+    kp <- plotKaryotype(plot.type = 4, labels.plotter = NULL, chromosomes = chromosomes, plot.params = plotParams)
+    kpAddBaseNumbers(kp, add.units = T, cex = 1, tick.dist = tickDist)
   } else if(!is.null(zoom)) {
-    kp <- plotKaryotype(plot.type=4, labels.plotter=NULL, zoom=zoom)
-    kpAddBaseNumbers(kp, add.units=T, cex=1, tick.dist=tickDist)
+    kp <- plotKaryotype(plot.type = 4, labels.plotter = NULL, zoom = zoom, plot.params = plotParams)
+    kpAddBaseNumbers(kp, add.units = T, cex = 1, tick.dist = tickDist)
   } else {
-    kp <- plotKaryotype(plot.type=4, labels.plotter=NULL)
-    kpAddChromosomeNames(kp, col='black',srt=90,cex=chromNamesCex)
+    kp <- plotKaryotype(plot.type = 4, labels.plotter = NULL, plot.params = plotParams)
+    kpAddChromosomeNames(kp, col = 'black',srt = 90,cex = chromNamesCex)
   } 
 
-  title(main=main, cex.main= mainTitleCex)
+  title(main = main, cex.main =  mainTitleCex)
 
   if(is.null(thirdGRanges)) {
     if(plotGenes) {
       # two tracks, plot genes
       kpAddLabels(kp, labels = topLabel, srt=90, pos=3, r0=0.6, r1=1, cex=axisLabelCex, label.margin = axisLabelMargin)
-      kpAxis(kp, ymin=0, ymax=ymax, r0=0.6)
+      kpAxis(kp, ymin=0, ymax=ymax, r0=0.6, r1=1)
       kp <- kpPlotManhattan(kp, data=topGRanges, r0=0.6, r1=1, ymax=ymax)
 
       kpAddLabels(kp, labels = bottomLabel, srt=90, pos=3, r0=0.6, r1=0.2, cex=axisLabelCex, label.margin = axisLabelMargin)
@@ -83,7 +83,7 @@ backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel
     } else {
       # two tracks, do not plot genes
       kpAddLabels(kp, labels = topLabel, srt=90, pos=3, r0=0.5, r1=1, cex=axisLabelCex, label.margin = axisLabelMargin)
-      kpAxis(kp, ymin=0, ymax=ymax, r0=0.5)
+      kpAxis(kp, ymin=0, ymax=ymax, r0=0.5, r1=1)
       kp <- kpPlotManhattan(kp, data=topGRanges, r0=0.5, r1=1, ymax=ymax)
 
       kpAddLabels(kp, labels = bottomLabel, srt=90, pos=3, r0=0, r1=0.5, cex=axisLabelCex, label.margin = axisLabelMargin)
@@ -93,10 +93,10 @@ backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel
     }
   } else {
     if(plotGenes) {
-      # three-track Manhattan, plot genes
-      kpAddLabels(kp, labels = thirdLabel, srt=90, pos=3, r0=0.74, r1=1, cex=axisLabelCex, label.margin = axisLabelMargin)
-      kpAxis(kp, ymin=0, ymax=ymax, r0=0.74, r1=1)
-      kp <- kpPlotManhattan(kp, data=thirdGRanges, r0=0.74, r1=1, ymax=ymax)
+      # Three-track Manhattan, plot genes
+      kpAddLabels(kp, labels = thirdLabel, srt=90, pos=3, r0=0.8, r1=1, cex=axisLabelCex, label.margin = axisLabelMargin)
+      kpAxis(kp, ymin=0, ymax=ymax, r0=0.8, r1=1)
+      kp <- kpPlotManhattan(kp, data=thirdGRanges, r0=0.8, r1=1, ymax=ymax)
 
       kpAddLabels(kp, labels = topLabel, srt=90, pos=3, r0=0.46, r1=0.72, cex=axisLabelCex, label.margin = axisLabelMargin)
       kpAxis(kp, ymin=0, ymax=ymax, r0=0.46, r1=0.72)
@@ -108,9 +108,9 @@ backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel
       kp <- kpPlotManhattan(kp, data=bottomGRanges, r0=0.46, r1=0.2, ymax=ymax, points.col = "2blues")
     } else {
       # Three-track Manhattan
-      kpAddLabels(kp, labels = thirdLabel, srt=90, pos=3, r0=0.68, r1=1, cex=axisLabelCex, label.margin = axisLabelMargin)
-      kpAxis(kp, ymin=0, ymax=ymax, r0=0.68, r1=1)
-      kp <- kpPlotManhattan(kp, data=thirdGRanges, r0=0.68, r1=1, ymax=ymax)
+      kpAddLabels(kp, labels = thirdLabel, srt=90, pos=3, r0=0.7, r1=1, cex=axisLabelCex, label.margin = axisLabelMargin)
+      kpAxis(kp, ymin=0, ymax=ymax, r0=0.7, r1=1)
+      kp <- kpPlotManhattan(kp, data=thirdGRanges, r0=0.7, r1=1, ymax=ymax)
 
       kpAddLabels(kp, labels = topLabel, srt=90, pos=3, r0=0.33, r1=0.66, cex=axisLabelCex, label.margin = axisLabelMargin)
       kpAxis(kp, ymin=0, ymax=ymax, r0=0.33, r1=0.66)
@@ -128,6 +128,6 @@ backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel
 
     genes.data<-addGeneNames(genes.data)
     genes.data.merged<-mergeTranscripts(genes.data)
-    kp<-kpPlotGenes(kp, data=genes.data.merged, r0=0, r1=0.2, cex=geneNameCex, gene.name.position='left')
+    kp<-kpPlotGenes(kp, data=genes.data.merged, r0=0, r1=0.18, gene.name.cex=geneNamesCex, gene.name.position='left')
   }
 }
