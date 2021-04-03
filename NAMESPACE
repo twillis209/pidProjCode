@@ -2,6 +2,8 @@
 
 export(backToBackManhattan)
 export(rmixture)
+export(stratified_qqplot)
+import(ggplot2)
 importFrom(GenomicRanges,"mcols<-")
 importFrom(GenomicRanges,mcols)
 importFrom(TxDb.Hsapiens.UCSC.hg38.knownGene,TxDb.Hsapiens.UCSC.hg38.knownGene)

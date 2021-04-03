@@ -5,24 +5,18 @@
 #' @details Note that this function does not do the heavy lifting of styling the plot's aesthetics.
 #' 
 #' @param dataFrame \code{data.frame} containing p-values and conditional p-values
-#' @param principalValueLabel
-#' @param conditionalValueLabel
-#' @param thresholds
+#' @param principalValueLabel label of principal p-value column in \code{dataFrame}
+#' @param conditionalValueLabel label of conditional trait column in \code{dataFrame}
+#' @param thresholds threshold values to define strata
 #'
-#' @importFrom ggplot2 ggplot geom_line geom_abline
+#' @import ggplot2 
+#'
+#' @return ggplot object 
 #' @export
-#' TODO write unconditional Q-Q plot example
-#' TODO write conditional Q-Q plot example, include modification
-#' TODO handle marginal Q-Q plot
-#' @examples
-#'
-#' sample_data <- data.frame(p=c(runif(9e5), pnorm(rnorm(1e5))), q=c(runif(9e5), pnorm(rnorm(1e5))))
-#'
-#' stratified_qqplot(sample_data, 'p', 'q')
 #' 
 stratified_qqplot <- function(dataFrame, principalValueLabel, conditionalValueLabel = NULL, thresholds = c(1, 1e-1, 1e-2, 1e-3, 1e-4)) {
 
-  dataFrame$negLogP <- -log10(dataFrame[, c(principalValueLabel)])
+  dataFrame$negLogP <- -log10(dataFrame[, principalValueLabel])
 
   if(is.null(conditionalValueLabel)) {
     daf <- dataFrame[, c(principalValueLabel, 'negLogP')]
