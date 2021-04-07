@@ -4,9 +4,9 @@
 #'
 #' @details Note that this function does not do the heavy lifting of styling the plot's aesthetics.
 #' 
-#' @param dataFrame \code{data.frame} containing p-values and conditional p-values
-#' @param principalValueLabel label of principal p-value column in \code{dataFrame}
-#' @param conditionalValueLabel label of conditional trait column in \code{dataFrame}
+#' @param data_frame \code{data.frame} containing p-values and conditional p-values
+#' @param prin_value_label label of principal p-value column in \code{data_frame}
+#' @param cond_value_label label of conditional trait column in \code{data_frame}
 #' @param thresholds threshold values to define strata
 #'
 #' @import ggplot2 
@@ -14,23 +14,23 @@
 #' @return ggplot object 
 #' @export
 #' 
-stratified_qqplot <- function(dataFrame, principalValueLabel, conditionalValueLabel = NULL, thresholds = c(1, 1e-1, 1e-2, 1e-3, 1e-4)) {
+stratified_qqplot <- function(data_frame, prin_value_label, cond_value_label = NULL, thresholds = c(1, 1e-1, 1e-2, 1e-3, 1e-4)) {
 
-  dataFrame$negLogP <- -log10(dataFrame[, principalValueLabel])
+  data_frame$negLogP <- -log10(data_frame[, prin_value_label])
 
-  if(is.null(conditionalValueLabel)) {
-    daf <- dataFrame[, c(principalValueLabel, 'negLogP')]
-    daf <- daf[order(daf[,principalValueLabel]), ]
+  if(is.null(cond_value_label)) {
+    daf <- data_frame[, c(prin_value_label, 'negLogP')]
+    daf <- daf[order(daf[,prin_value_label]), ]
     daf$pp <- -log10(ppoints(nrow(daf)))
     daf$threshold <- factor(c(1))
   } else {
-    dataFrame <- dataFrame[, c(principalValueLabel, conditionalValueLabel, 'negLogP')]
+    data_frame <- data_frame[, c(prin_value_label, cond_value_label, 'negLogP')]
 
     dafs <- list()
 
     for(i in seq_along(thresholds)) {
-      daf <- subset(dataFrame, get(conditionalValueLabel) < thresholds[i])
-      daf <- daf[order(daf[ , principalValueLabel]) , ]
+      daf <- subset(data_frame, get(cond_value_label) < thresholds[i])
+      daf <- daf[order(daf[ , prin_value_label]) , ]
       daf$pp <- -log10(ppoints(nrow(daf)))
       daf$threshold <- factor(thresholds)[i]
       dafs[[i]] <- daf
