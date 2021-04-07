@@ -1,0 +1,71 @@
+---
+title: "Stratified Q-Q plots"
+author: "Thomas Willis"
+date: "7 April 2021"
+output: html_document
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width=7,
+  fig.height=6,
+  results = 'hide',
+  message=F
+)
+```
+
+```{r setup, include = F}
+library(pidProjCode)
+library(ggplot2)
+
+theme_set(theme_bw()+
+          theme(
+            axis.title = element_text(size=15),
+            plot.title=element_text(hjust=0.5, size=15),
+            strip.text=element_text(size=8),
+            axis.text.x=element_text(size=8, angle=30, color="black"),
+            axis.text.y=element_text(size=12, color="black"),
+            legend.title=element_text(size=12),
+            legend.text=element_text(size=12)
+          )
+          )
+
+```
+
+## `stratified_qqplot` 
+
+`stratified_qqplot` is a short function to simplify the creation of Q-Q plots, both 'unconditional' and stratified. Its output is quite basic: it is up to the user to style the aesthetics of the `ggplot2` plot to get something pretty.
+
+```{r unconditional_qqplot}
+sample_data <- data.frame(p = c(runif(1e5), runif(1e2, min = 0, max = 1e-4)))
+
+stratified_qqplot(sample_data, 'p')
+```
+```{r conditional_qqplot}
+sample_data <- data.frame(p = c(runif(1e5), runif(1e2, min = 0, max = 1e-4)),
+                          q = c(runif(1e5), runif(1e2, min = 0, max = 1e-4))
+                          )
+
+stratified_qqplot(sample_data, 'p', 'q')
+```
+
+The thresholds can be customised, too.
+
+```{r custom_thresholds}
+stratified_qqplot(sample_data, 'p', 'q', thresholds=c(1e-1, 1e-2))
+```
+
+It's not hard to get a better-looking plot.
+
+```{r stylish_conditional_qqplot}
+colours <- c('black', 'red', 'green', 'blue', 'purple')
+
+stratified_qqplot(sample_data, 'p', 'q')+
+  scale_colour_manual(name="Conditional trait\np-value cut-offs", values=colours)+
+  ggtitle('A more stylish plot')+
+  ylim(0,7)+
+  ylab("-log10(p)")+
+  xlab("-log10(percentile(p))")
+```
