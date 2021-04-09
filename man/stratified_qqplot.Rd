@@ -5,18 +5,18 @@
 \title{Writes out a stratified Q-Q plot.}
 \usage{
 stratified_qqplot(
-  dataFrame,
-  principalValueLabel,
-  conditionalValueLabel = NULL,
+  data_frame,
+  prin_value_label,
+  cond_value_label = NULL,
   thresholds = c(1, 0.1, 0.01, 0.001, 1e-04)
 )
 }
 \arguments{
-\item{dataFrame}{\code{data.frame} containing p-values and conditional p-values}
+\item{data_frame}{\code{data.frame} containing p-values and conditional p-values}
 
-\item{principalValueLabel}{label of principal p-value column in \code{dataFrame}}
+\item{prin_value_label}{label of principal p-value column in \code{data_frame}}
 
-\item{conditionalValueLabel}{label of conditional trait column in \code{dataFrame}}
+\item{cond_value_label}{label of conditional trait column in \code{data_frame}}
 
 \item{thresholds}{threshold values to define strata}
 }
