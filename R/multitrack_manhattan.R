@@ -32,7 +32,7 @@ multitrack_manhattan <- function(gRanges, axis_labels, main, ymax = 15, axis_lab
     kp <- plotKaryotype(plot.type = 4, labels.plotter = NULL, chromosomes = chromosomes, plot.params = plot_params)
     kpAddBaseNumbers(kp, add.units = T, cex = chrom_tick_cex, tick.dist = chrom_tick_dist)
   } else {
-    kp <- plotKaryotype(plot.type = 4, labels.plotter = NULL, plot.params = plot_params)
+    kp <- plotKaryotype(plot.type = 4, labels.plotter = NULL, plot.params = plot_params, chromosomes = paste0('chr', 1:22))
     kpAddChromosomeNames(kp, col = 'black', srt = 90, cex = chrom_names_cex)
   }
 
@@ -51,6 +51,7 @@ multitrack_manhattan <- function(gRanges, axis_labels, main, ymax = 15, axis_lab
 
     kp <- kpPlotManhattan(kp, data = gRanges[[i]],
                         points.col = '2blues',
-                        r0 = auto$r0, r1 = auto$r1)
+                        r0 = auto$r0, r1 = auto$r1,
+                        ymax = ymax)
     }
 }
