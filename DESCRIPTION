@@ -13,8 +13,7 @@ biocViews:
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
-    rmarkdown,
-    data.table
+    rmarkdown
 Config/testthat/edition: 3
 Imports: 
     GenomicRanges,
@@ -25,5 +24,7 @@ Imports:
     karyoploteR,
     TxDb.Hsapiens.UCSC.hg38.knownGene,
     org.Hs.eg.db,
-    ggplot2
+    ggplot2,
+    mltools,
+    data.table
 VignetteBuilder: knitr
