@@ -1,15 +1,15 @@
 #' @param u
 #' @param v
-#' @importFrom mltools empirical_cdf
+#' @export 
 gps_test_stat<- function(u, v) {
   if(length(u) != length(v)) {
     stop("Lengths of u and v differ")
   }
 
   n <- length(u)
-  cdf_u <- empirical_cdf(u, u)$CDF
-  cdf_v <- empirical_cdf(v, v)$CDF
-  cdf_u_v <- empirical_cdf(data.table(u=u, v=v), data.table(u=u, v=v))$CDF
+  cdf_u <- ecdf_cpp(u, u)
+  cdf_v <- ecdf_cpp(v, v)
+  cdf_u_v <- bivariate_ecdf_par_cpp(u, v)
 
   # TODO need to check for 0 values in the denominator
   max(sqrt(n/log(n))*abs(cdf_u_v - (cdf_u*cdf_v))/sqrt(cdf_u*cdf_v - (cdf_u^2)*(cdf_v^2)))
