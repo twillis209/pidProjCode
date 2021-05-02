@@ -7,6 +7,7 @@ gps_test_stat<- function(u, v) {
   }
 
   n <- length(u)
+
   cdf_u <- ecdf_cpp(u, u)
   cdf_v <- ecdf_cpp(v, v)
   cdf_u_v <- bivariate_ecdf_par_cpp(u, v)
