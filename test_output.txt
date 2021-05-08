@@ -1,66 +1,0 @@
-Loading pidProjCode
-
-Testing pidProjCode
-✔ |  OK F W S | Context
-⠏ |   0       | back_to_back_manhattan                                          ⠙ |   2       | back_to_back_manhattan                                          ⠼ |   5       | back_to_back_manhattan                                          ⠦ |   7       | back_to_back_manhattan                                          ⠧ |   8       | back_to_back_manhattan                                          ⠇ |   9       | back_to_back_manhattan                                          ⠏ |  10       | back_to_back_manhattan                                          ⠋ |  11       | back_to_back_manhattan                                            1613 genes were dropped because they have exons located on both strands
-  of the same reference sequence or on more than one reference sequence,
-  so cannot be represented by a single genomic range.
-  Use 'single.strand.genes.only=FALSE' to get all the genes in a
-  GRangesList object, or use suppressMessages() to suppress this message.
-Loading required package: org.Hs.eg.db
-Loading required package: AnnotationDbi
-Loading required package: stats4
-Loading required package: BiocGenerics
-Loading required package: parallel
-
-Attaching package: 'BiocGenerics'
-
-The following objects are masked from 'package:parallel':
-
-    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
-    clusterExport, clusterMap, parApply, parCapply, parLapply,
-    parLapplyLB, parRapply, parSapply, parSapplyLB
-
-The following objects are masked from 'package:stats':
-
-    IQR, mad, sd, var, xtabs
-
-The following objects are masked from 'package:base':
-
-    Filter, Find, Map, Position, Reduce, anyDuplicated, append,
-    as.data.frame, basename, cbind, colnames, dirname, do.call,
-    duplicated, eval, evalq, get, grep, grepl, intersect, is.unsorted,
-    lapply, mapply, match, mget, order, paste, pmax, pmax.int, pmin,
-    pmin.int, rank, rbind, rownames, sapply, setdiff, sort, table,
-    tapply, union, unique, unsplit, which.max, which.min
-
-Loading required package: Biobase
-Welcome to Bioconductor
-
-    Vignettes contain introductory material; view with
-    'browseVignettes()'. To cite Bioconductor, see
-    'citation("Biobase")', and for packages 'citation("pkgname")'.
-
-Loading required package: IRanges
-Loading required package: S4Vectors
-
-Attaching package: 'S4Vectors'
-
-The following object is masked from 'package:base':
-
-    expand.grid
-
-⠙ |  12       | back_to_back_manhattan                                            1613 genes were dropped because they have exons located on both strands
-  of the same reference sequence or on more than one reference sequence,
-  so cannot be represented by a single genomic range.
-  Use 'single.strand.genes.only=FALSE' to get all the genes in a
-  GRangesList object, or use suppressMessages() to suppress this message.
-⠹ |  13       | back_to_back_manhattan                                          ✔ |  13       | back_to_back_manhattan [63.3 s]
-
-══ Results ═════════════════════════════════════════════════════════════════════
-Duration: 63.4 s
-
-[ FAIL 0 | WARN 0 | SKIP 0 | PASS 13 ]
-Warning message:
-In setup_ns_exports(path, export_all, export_imports) :
-  Objects listed as exports, but not present in namespace: backToBackManhattan
