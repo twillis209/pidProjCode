@@ -1,5 +1,5 @@
 #' @title Writes out a back-to-back Manhattan plot.
-#' 
+#'
 #' @description Main back-to-back plot can be supplemented with a third plot and with gene structure diagrams.
 #'
 #' @details At present we require that the p-value column in a GenomicRanges column be labelled 'P' or 'p'.
@@ -14,6 +14,8 @@
 #' @param axis_label_margin Size of margin between axis and its label
 #' @param main_title_cex Scaling factor for main title
 #' @param axis_label_cex Scaling factor for axis label
+#' @param axis_label_offset Offset for axis label
+#' @param axis_tick_cex Scaling factor for axis ticks
 #' @param plot_genes Flag to have karyoploteR plot gene structures beneath Manhattan
 #' @param gene_names_cex Scaling factor for gene labels
 #' @param chrom_names_cex Scaling factor for chromosome labels
@@ -29,105 +31,106 @@
 #' @export
 #' 
 #' @examples
-backToBackManhattan <- function(top_gRanges, bottom_gRanges, top_label, bottom_label, main, ymax = 15, tick_dist = 1e5, axis_label_margin = 0.03, main_title_cex = 2.7, axis_label_cex = 1.8, plot_genes = F, gene_names_cex = 1, chrom_names_cex = 2, third_gRanges = NULL, third_label = NULL, chromosomes = NULL, zoom = NULL, plot_params = getDefaultPlotParams(plot.type = 4)) {
+back_to_back_manhattan <- function(top_gRanges, bottom_gRanges, top_label, bottom_label, main, ymax = 15, tick_dist = 1e5, axis_label_margin = 0.03, main_title_cex = 2.7, axis_label_cex = 1.8, axis_label_offset = 0, axis_tick_cex = 1, plot_genes = F, gene_names_cex = 1, chrom_names_cex = 2, third_gRanges = NULL, third_label = NULL, chromosomes = NULL, zoom = NULL, plot_params = getDefaultPlotParams(plot.type = 4)) {
 
   if(!is.null(chromosomes) & !is.null(zoom)) {
     stop("Cannot specify both \'chromosomes\' and \'zoom\'")
   }
 
-  if(!is.null(thirdGRanges)) {
-    if(is.null(thirdLabel)) {
-      stop("Need to specify \'thirdLabel\' if specifying \'thirdGRanges\'")
+  if(!is.null(third_gRanges)) {
+    if(is.null(third_label)) {
+      stop("Need to specify \'third_label\' if specifying \'third_gRanges\'")
       }
-    if(!('P' %in% names(mcols(thirdGRanges)) | 'p' %in% names(mcols(thirdGRanges)))) {
-      stop('Need a p-value column labelled \'P\' or \'p\' in thirdGRanges')
-    } 
+    if(!('P' %in% names(mcols(third_gRanges)) | 'p' %in% names(mcols(third_gRanges)))) {
+      stop('Need a p-value column labelled \'P\' or \'p\' in third_gRanges')
+    }
   }
 
-  if(plotGenes & is.null(zoom)) {
+  if(plot_genes & is.null(zoom)) {
     stop("Can only plot gene tracks if \'zoom\' coordinates are specified")
   }
 
-  if(!('P' %in% names(mcols(topGRanges)) | 'p' %in% names(mcols(topGRanges)))) {
-    stop('Need a p-value column labelled \'P\' or \'p\' in topGRanges')
+  if(!('P' %in% names(mcols(top_gRanges)) | 'p' %in% names(mcols(top_gRanges)))) {
+    stop('Need a p-value column labelled \'P\' or \'p\' in top_gRanges')
   }
 
-  if(!('P' %in% names(mcols(bottomGRanges)) | 'p' %in% names(mcols(bottomGRanges)))) {
-    stop('Need a p-value column labelled \'P\' or \'p\' in bottomGRanges')
+  if(!('P' %in% names(mcols(bottom_gRanges)) | 'p' %in% names(mcols(bottom_gRanges)))) {
+    stop('Need a p-value column labelled \'P\' or \'p\' in bottom_gRanges')
   } 
 
   if(!is.null(chromosomes)) {
-    kp <- plotKaryotype(plot.type = 4, labels.plotter = NULL, chromosomes = chromosomes, plot.params = plotParams)
-    kpAddBaseNumbers(kp, add.units = T, cex = 1, tick.dist = tickDist)
+    kp <- plotKaryotype(plot.type = 4, labels.plotter = NULL, chromosomes = chromosomes, plot.params = plot_params)
+    kpAddBaseNumbers(kp, add.units = T, cex = 1, tick.dist = tick_dist)
   } else if(!is.null(zoom)) {
-    kp <- plotKaryotype(plot.type = 4, labels.plotter = NULL, zoom = zoom, plot.params = plotParams)
-    kpAddBaseNumbers(kp, add.units = T, cex = 1, tick.dist = tickDist)
+    kp <- plotKaryotype(plot.type = 4, labels.plotter = NULL, zoom = zoom, plot.params = plot_params)
+    kpAddBaseNumbers(kp, add.units = T, cex = 1, tick.dist = tick_dist)
   } else {
-    kp <- plotKaryotype(plot.type = 4, labels.plotter = NULL, plot.params = plotParams)
-    kpAddChromosomeNames(kp, col = 'black',srt = 90,cex = chromNamesCex)
+    kp <- plotKaryotype(plot.type = 4, labels.plotter = NULL, plot.params = plot_params)
+    kpAddChromosomeNames(kp, col = 'black',srt = 90,cex = chrom_names_cex)
   } 
 
-  title(main = main, cex.main =  mainTitleCex)
+  title(main = main, cex.main =  main_title_cex)
 
-  if(is.null(thirdGRanges)) {
-    if(plotGenes) {
+  if(is.null(third_gRanges)) {
+    if(plot_genes) {
       # two tracks, plot genes
-      kpAddLabels(kp, labels = topLabel, srt=90, pos=3, r0=0.6, r1=1, cex=axisLabelCex, label.margin = axisLabelMargin)
-      kpAxis(kp, ymin=0, ymax=ymax, r0=0.6, r1=1)
-      kp <- kpPlotManhattan(kp, data=topGRanges, r0=0.6, r1=1, ymax=ymax)
+      kpAddLabels(kp, labels = top_label, srt=90, pos=3, r0=0.6, r1=1, cex=axis_label_cex, label.margin = axis_label_margin, offset = axis_label_offset)
+      kpAxis(kp, ymin=0, ymax=ymax, r0=0.6, r1=1, cex = axis_tick_cex)
+      kp <- kpPlotManhattan(kp, data=top_gRanges, r0=0.6, r1=1, ymax=ymax)
 
-      kpAddLabels(kp, labels = bottomLabel, srt=90, pos=3, r0=0.6, r1=0.2, cex=axisLabelCex, label.margin = axisLabelMargin)
+      kpAddLabels(kp, labels = bottom_label, srt=90, pos=3, r0=0.6, r1=0.2, cex=axis_label_cex, label.margin = axis_label_margin, offset = axis_label_offset)
       # Note how r0 and r1 are flipped here for kpAxis and kpPlotManhattan
-      kpAxis(kp, ymin=0, ymax=ymax, r0=0.6, r1=0.2)
-      kp <- kpPlotManhattan(kp, data=bottomGRanges, r0=0.6, r1=0.2, ymax=ymax, points.col = "2blues")
+      kpAxis(kp, ymin=0, ymax=ymax, r0=0.6, r1=0.2, cex = axis_tick_cex)
+      kp <- kpPlotManhattan(kp, data=bottom_gRanges, r0=0.6, r1=0.2, ymax=ymax, points.col = "2blues")
     } else {
       # two tracks, do not plot genes
-      kpAddLabels(kp, labels = topLabel, srt=90, pos=3, r0=0.5, r1=1, cex=axisLabelCex, label.margin = axisLabelMargin)
-      kpAxis(kp, ymin=0, ymax=ymax, r0=0.5, r1=1)
-      kp <- kpPlotManhattan(kp, data=topGRanges, r0=0.5, r1=1, ymax=ymax)
+      kpAddLabels(kp, labels = top_label, srt=90, pos=3, r0=0.5, r1=1, cex=axis_label_cex, label.margin = axis_label_margin, offset = axis_label_offset)
+      kpAxis(kp, ymin=0, ymax=ymax, r0=0.5, r1=1, cex = axis_tick_cex)
+      kp <- kpPlotManhattan(kp, data=top_gRanges, r0=0.5, r1=1, ymax=ymax)
 
-      kpAddLabels(kp, labels = bottomLabel, srt=90, pos=3, r0=0, r1=0.5, cex=axisLabelCex, label.margin = axisLabelMargin)
+      kpAddLabels(kp, labels = bottom_label, srt=90, pos=3, r0=0, r1=0.5, cex=axis_label_cex, label.margin = axis_label_margin, offset = axis_label_offset)
       # Note how r0 and r1 are flipped here for kpAxis and kpPlotManhattan
-      kpAxis(kp, ymin=0, ymax=ymax, r0=0.5, r1=0)
-      kp <- kpPlotManhattan(kp, data=bottomGRanges, r0=0.5, r1=0, ymax=ymax, points.col = "2blues")
+      kpAxis(kp, ymin=0, ymax=ymax, r0=0.5, r1=0, cex = axis_tick_cex)
+      kp <- kpPlotManhattan(kp, data=bottom_gRanges, r0=0.5, r1=0, ymax=ymax, points.col = "2blues")
     }
   } else {
-    if(plotGenes) {
+    if(plot_genes) {
       # Three-track Manhattan, plot genes
-      kpAddLabels(kp, labels = thirdLabel, srt=90, pos=3, r0=0.8, r1=1, cex=axisLabelCex, label.margin = axisLabelMargin)
-      kpAxis(kp, ymin=0, ymax=ymax, r0=0.8, r1=1)
-      kp <- kpPlotManhattan(kp, data=thirdGRanges, r0=0.8, r1=1, ymax=ymax)
+      kpAddLabels(kp, labels = third_label, srt=90, pos=3, r0=0.8, r1=1, cex=axis_label_cex, label.margin = axis_label_margin, offset = axis_label_offset)
+      kpAxis(kp, ymin=0, ymax=ymax, r0=0.8, r1=1, cex = axis_tick_cex)
+      kp <- kpPlotManhattan(kp, data=third_gRanges, r0=0.8, r1=1, ymax=ymax)
 
-      kpAddLabels(kp, labels = topLabel, srt=90, pos=3, r0=0.46, r1=0.72, cex=axisLabelCex, label.margin = axisLabelMargin)
-      kpAxis(kp, ymin=0, ymax=ymax, r0=0.46, r1=0.72)
-      kp <- kpPlotManhattan(kp, data=topGRanges, r0=0.46, r1=0.72, ymax=ymax)
+      kpAddLabels(kp, labels = top_label, srt=90, pos=3, r0=0.46, r1=0.72, cex=axis_label_cex, label.margin = axis_label_margin, offset = axis_label_offset)
+      kpAxis(kp, ymin=0, ymax=ymax, r0=0.46, r1=0.72, cex = axis_tick_cex)
+      kp <- kpPlotManhattan(kp, data=top_gRanges, r0=0.46, r1=0.72, ymax=ymax)
 
-      kpAddLabels(kp, labels = bottomLabel, srt=90, pos=3, r0=0.2, r1=0.46, cex=axisLabelCex, label.margin = axisLabelMargin)
+      kpAddLabels(kp, labels = bottom_label, srt=90, pos=3, r0=0.2, r1=0.46, cex=axis_label_cex, label.margin = axis_label_margin, offset = axis_label_offset)
       # Note how r0 and r1 are flipped here for kpAxis and kpPlotManhattan
-      kpAxis(kp, ymin=0, ymax=ymax, r0=0.46, r1=0.2)
-      kp <- kpPlotManhattan(kp, data=bottomGRanges, r0=0.46, r1=0.2, ymax=ymax, points.col = "2blues")
+      kpAxis(kp, ymin=0, ymax=ymax, r0=0.46, r1=0.2, cex = axis_tick_cex)
+      kp <- kpPlotManhattan(kp, data=bottom_gRanges, r0=0.46, r1=0.2, ymax=ymax, points.col = "2blues")
     } else {
       # Three-track Manhattan
-      kpAddLabels(kp, labels = thirdLabel, srt=90, pos=3, r0=0.7, r1=1, cex=axisLabelCex, label.margin = axisLabelMargin)
-      kpAxis(kp, ymin=0, ymax=ymax, r0=0.7, r1=1)
-      kp <- kpPlotManhattan(kp, data=thirdGRanges, r0=0.7, r1=1, ymax=ymax)
+      kpAddLabels(kp, labels = third_label, srt=90, pos=3, r0=0.7, r1=1, cex=axis_label_cex, label.margin = axis_label_margin, offset = axis_label_offset)
+      kpAxis(kp, ymin=0, ymax=ymax, r0=0.7, r1=1, cex = axis_tick_cex)
+      kp <- kpPlotManhattan(kp, data=third_gRanges, r0=0.7, r1=1, ymax=ymax)
 
-      kpAddLabels(kp, labels = topLabel, srt=90, pos=3, r0=0.33, r1=0.66, cex=axisLabelCex, label.margin = axisLabelMargin)
-      kpAxis(kp, ymin=0, ymax=ymax, r0=0.33, r1=0.66)
-      kp <- kpPlotManhattan(kp, data=topGRanges, r0=0.33, r1=0.66, ymax=ymax)
+      kpAddLabels(kp, labels = top_label, srt=90, pos=3, r0=0.33, r1=0.66, cex=axis_label_cex, label.margin = axis_label_margin, offset = axis_label_offset)
+      kpAxis(kp, ymin=0, ymax=ymax, r0=0.33, r1=0.66, cex = axis_tick_cex)
 
-      kpAddLabels(kp, labels = bottomLabel, srt=90, pos=3, r0=0, r1=0.33, cex=axisLabelCex, label.margin = axisLabelMargin)
+      kp <- kpPlotManhattan(kp, data=top_gRanges, r0=0.33, r1=0.66, ymax=ymax)
+
+      kpAddLabels(kp, labels = bottom_label, srt=90, pos=3, r0=0, r1=0.33, cex=axis_label_cex, label.margin = axis_label_margin, offset = axis_label_offset)
       # Note how r0 and r1 are flipped here for kpAxis and kpPlotManhattan
-      kpAxis(kp, ymin=0, ymax=ymax, r0=0.33, r1=0)
-      kp <- kpPlotManhattan(kp, data=bottomGRanges, r0=0.33, r1=0, ymax=ymax, points.col = "2blues")
+      kpAxis(kp, ymin=0, ymax=ymax, r0=0.33, r1=0, cex = axis_tick_cex)
+      kp <- kpPlotManhattan(kp, data=bottom_gRanges, r0=0.33, r1=0, ymax=ymax, points.col = "2blues")
       }
   }
 
-  if(plotGenes) {
+  if(plot_genes) {
     genes.data<-makeGenesDataFromTxDb(karyoplot=kp, txdb=TxDb.Hsapiens.UCSC.hg38.knownGene::TxDb.Hsapiens.UCSC.hg38.knownGene)
 
     genes.data<-addGeneNames(genes.data)
     genes.data.merged<-mergeTranscripts(genes.data)
-    kp<-kpPlotGenes(kp, data=genes.data.merged, r0=0, r1=0.18, gene.name.cex=geneNamesCex, gene.name.position='left')
+    kp<-kpPlotGenes(kp, data=genes.data.merged, r0=0, r1=0.18, gene.name.cex=gene_names_cex, gene.name.position='left')
   }
 }

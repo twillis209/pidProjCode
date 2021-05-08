@@ -4,34 +4,34 @@ test_that("Error is thrown when both \'chromosomes\' and \'zoom\' arguments are 
   grangesTop <- GenomicRanges::makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
   grangesBottom <- GenomicRanges::makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
 
-  expect_error(backToBackManhattan(topGRanges=grangesTop,
-                                   bottomGRanges=grangesBottom,
-                                   topLabel='top',
-                                   bottomLabel='bottom',
+  expect_error(back_to_back_manhattan(top_gRanges=grangesTop,
+                                   bottom_gRanges=grangesBottom,
+                                   top_label='top',
+                                   bottom_label='bottom',
                                    main='title',
                                    chromosomes=c('chr1'),
                                    zoom='chr1:28567-28576'),
                'Cannot specify both \'chromosomes\' and \'zoom\'')
 })
 
-test_that("Error is thrown for thirdGRanges argument without accompanying thirdLabel argument", {
+test_that("Error is thrown for third_gRanges argument without accompanying third_label argument", {
   set.seed(42)
   gwasDaf <- data.frame('chr'=paste0('chr', 1:10), 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
   grangesTop <- GenomicRanges::makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
   grangesBottom <- GenomicRanges::makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
   grangesThird <- GenomicRanges::makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
 
-  expect_error(backToBackManhattan(topGRanges=grangesTop,
-                                   bottomGRanges=grangesBottom,
-                                   topLabel='top',
-                                   bottomLabel='bottom',
+  expect_error(back_to_back_manhattan(top_gRanges=grangesTop,
+                                   bottom_gRanges=grangesBottom,
+                                   top_label='top',
+                                   bottom_label='bottom',
                                    main='title',
-                                   thirdGRanges=grangesThird,
-                                   thirdLabel=NULL),
-               'Need to specify \'thirdLabel\' if specifying \'thirdGRanges\'')
+                                   third_gRanges=grangesThird,
+                                   third_label=NULL),
+               'Need to specify \'third_label\' if specifying \'third_gRanges\'')
 })
 
-test_that("Error is thrown for specifying \'plotGenes\' flag without accompanying \'zoom\' argument", {
+test_that("Error is thrown for specifying \'plot_genes\' flag without accompanying \'zoom\' argument", {
   set.seed(42)
   gwasDaf <- data.frame('chr'=paste0('chr', 1:10), 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
 
@@ -39,31 +39,31 @@ test_that("Error is thrown for specifying \'plotGenes\' flag without accompanyin
   grangesBottom <- GenomicRanges::makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
   grangesThird <- GenomicRanges::makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
 
-  expect_error(backToBackManhattan(topGRanges=grangesTop,
-                                   bottomGRanges=grangesBottom,
-                                   topLabel='top',
-                                   bottomLabel='bottom',
+  expect_error(back_to_back_manhattan(top_gRanges=grangesTop,
+                                   bottom_gRanges=grangesBottom,
+                                   top_label='top',
+                                   bottom_label='bottom',
                                    main='title',
-                                   plotGenes=T),
+                                   plot_genes=T),
                'Can only plot gene tracks if \'zoom\' coordinates are specified')
 })
 
-test_that("Error is thrown for omitting p-value column from topGRanges", {
+test_that("Error is thrown for omitting p-value column from top_gRanges", {
   set.seed(42)
   gwasDaf <- data.frame('chr'=paste0('chr', 1:10), 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
   grangesTop <- GenomicRanges::makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
   grangesBottom <- GenomicRanges::makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
   grangesTop$p <- NULL
 
-  expect_error(backToBackManhattan(topGRanges=grangesTop,
-                                   bottomGRanges=grangesBottom,
-                                   topLabel='top',
-                                   bottomLabel='bottom',
+  expect_error(back_to_back_manhattan(top_gRanges=grangesTop,
+                                   bottom_gRanges=grangesBottom,
+                                   top_label='top',
+                                   bottom_label='bottom',
                                    main='title'),
-               'Need a p-value column labelled \'P\' or \'p\' in topGRanges')
+               'Need a p-value column labelled \'P\' or \'p\' in top_gRanges')
 })
 
-test_that("Error is thrown for omitting p-value column from bottomGRanges", {
+test_that("Error is thrown for omitting p-value column from bottom_gRanges", {
   set.seed(42)
   gwasDaf <- data.frame('chr'=paste0('chr', 1:10), 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
 
@@ -71,15 +71,15 @@ test_that("Error is thrown for omitting p-value column from bottomGRanges", {
   grangesBottom <- GenomicRanges::makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
   grangesBottom$p <- NULL
 
-  expect_error(backToBackManhattan(topGRanges=grangesTop,
-                                   bottomGRanges=grangesBottom,
-                                   topLabel='top',
-                                   bottomLabel='bottom',
+  expect_error(back_to_back_manhattan(top_gRanges=grangesTop,
+                                   bottom_gRanges=grangesBottom,
+                                   top_label='top',
+                                   bottom_label='bottom',
                                    main='title'),
-               'Need a p-value column labelled \'P\' or \'p\' in bottomGRanges')
+               'Need a p-value column labelled \'P\' or \'p\' in bottom_gRanges')
 })
 
-test_that("Error is thrown for omitting p-value column from thirdGRanges", {
+test_that("Error is thrown for omitting p-value column from third_gRanges", {
   set.seed(42)
   gwasDaf <- data.frame('chr'=paste0('chr', 1:10), 'bp'=28567:28576, 'SNP'=paste0('rs', 1:10),'p'=runif(10))
 
@@ -88,14 +88,14 @@ test_that("Error is thrown for omitting p-value column from thirdGRanges", {
   grangesThird <- GenomicRanges::makeGRangesFromDataFrame(gwasDaf, start.field = 'bp', end.field = 'bp', seqnames.field = 'chr', ignore.strand = T, keep.extra.columns = T)
   grangesThird$p <- NULL
 
-  expect_error(backToBackManhattan(topGRanges=grangesTop,
-                                   bottomGRanges=grangesBottom,
-                                   thirdGRanges=grangesThird,
-                                   topLabel='top',
-                                   bottomLabel='bottom',
-                                   thirdLabel='ref',
+  expect_error(back_to_back_manhattan(top_gRanges=grangesTop,
+                                   bottom_gRanges=grangesBottom,
+                                   third_gRanges=grangesThird,
+                                   top_label='top',
+                                   bottom_label='bottom',
+                                   third_label='ref',
                                    main='title'),
-               'Need a p-value column labelled \'P\' or \'p\' in thirdGRanges')
+               'Need a p-value column labelled \'P\' or \'p\' in third_gRanges')
 })
 
 test_that("Whole-genome Manhattan is drawn", {
@@ -111,7 +111,7 @@ test_that("Whole-genome Manhattan is drawn", {
   pidGRanges <- GenomicRanges::makeGRangesFromDataFrame(data.frame(pidDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
   igadGRanges <- GenomicRanges::makeGRangesFromDataFrame(data.frame(igadDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
 
-  backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='PID and IgAD')
+  back_to_back_manhattan(pidGRanges, igadGRanges, top_label='PID', bottom_label='IgAD', main='PID and IgAD')
 
   expect_equal(2, 1+1)
 })
@@ -129,7 +129,7 @@ test_that("Whole-karyotype Manhattan is drawn when outputFile is NULL", {
   pidGRanges <- GenomicRanges::makeGRangesFromDataFrame(data.frame(pidDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
   igadGRanges <- GenomicRanges::makeGRangesFromDataFrame(data.frame(igadDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
 
-  backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='PID and IgAD')
+  back_to_back_manhattan(pidGRanges, igadGRanges, top_label='PID', bottom_label='IgAD', main='PID and IgAD')
 
   expect_equal(2, 1+1)
 })
@@ -147,7 +147,7 @@ test_that("Single-chromosome Manhattan is drawn", {
   pidGRanges <- GenomicRanges::makeGRangesFromDataFrame(data.frame(pidDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
   igadGRanges <- GenomicRanges::makeGRangesFromDataFrame(data.frame(igadDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
 
-  backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6', chromosomes='chr6', tickDist=1e7)
+  back_to_back_manhattan(pidGRanges, igadGRanges, top_label='PID', bottom_label='IgAD', main='Chromosome 6', chromosomes='chr6', tick_dist=1e7)
 
   expect_equal(2, 1+1)
 })
@@ -169,7 +169,7 @@ test_that("Single-chromosome Manhattan with three tracks is drawn", {
   igadGRanges <- GenomicRanges::makeGRangesFromDataFrame(data.frame(igadDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
   sleGRanges <- GenomicRanges::makeGRangesFromDataFrame(data.frame(sleDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
 
-  backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', thirdLabel = 'SLE', thirdGRanges = sleGRanges, main='Chromosome 6', chromosomes='chr6', tickDist=1e7)
+  back_to_back_manhattan(pidGRanges, igadGRanges, top_label='PID', bottom_label='IgAD', third_label = 'SLE', third_gRanges = sleGRanges, main='Chromosome 6', chromosomes='chr6', tick_dist=1e7)
 
   expect_equal(2, 1+1)
 })
@@ -187,7 +187,7 @@ test_that("\'Zoomed\' Manhattan is drawn", {
   pidGRanges <- GenomicRanges::makeGRangesFromDataFrame(data.frame(pidDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
   igadGRanges <- GenomicRanges::makeGRangesFromDataFrame(data.frame(igadDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
 
-  backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-36e6', tickDist=1e6)
+  back_to_back_manhattan(pidGRanges, igadGRanges, top_label='PID', bottom_label='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-36e6', tick_dist=1e6)
 
   expect_equal(2, 1+1)
 })
@@ -205,7 +205,7 @@ test_that("\'Zoomed\' Manhattan is drawn with genes", {
   pidGRanges <- GenomicRanges::makeGRangesFromDataFrame(data.frame(pidDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
   igadGRanges <- GenomicRanges::makeGRangesFromDataFrame(data.frame(igadDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
 
-  backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=1e5, plotGenes=T)
+  back_to_back_manhattan(pidGRanges, igadGRanges, top_label='PID', bottom_label='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tick_dist=1e5, plot_genes=T)
 
   expect_equal(2, 1+1)
 })
@@ -227,7 +227,7 @@ test_that("\'Zoomed\' Manhattan with three plots is drawn with genes", {
   igadGRanges <- GenomicRanges::makeGRangesFromDataFrame(data.frame(igadDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
   sleGRanges <- GenomicRanges::makeGRangesFromDataFrame(data.frame(sleDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
 
-  backToBackManhattan(pidGRanges, igadGRanges, thirdGRanges=sleGRanges, thirdLabel='SLE', topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=1e5, plotGenes=T)
+  back_to_back_manhattan(pidGRanges, igadGRanges, third_gRanges=sleGRanges, third_label='SLE', top_label='PID', bottom_label='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tick_dist=1e5, plot_genes=T)
 
   expect_equal(2, 1+1)
 })
