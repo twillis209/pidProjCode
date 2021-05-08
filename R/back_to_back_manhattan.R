@@ -4,24 +4,24 @@
 #'
 #' @details At present we require that the p-value column in a GenomicRanges column be labelled 'P' or 'p'.
 #'
-#' @param topGRanges GenomicRanges object containing data for top plot
-#' @param bottomGRanges GenomicRanges object containing data for bottom plot
-#' @param topLabel Axis label for top Manhattan plot of back-to-back pair
-#' @param bottomLabel Axis label for bottom Manhattan plot of back-to-back pair
+#' @param top_gRanges GenomicRanges object containing data for top plot
+#' @param bottom_gRanges GenomicRanges object containing data for bottom plot
+#' @param top_label Axis label for top Manhattan plot of back-to-back pair
+#' @param bottom_label Axis label for bottom Manhattan plot of back-to-back pair
 #' @param main Main title
 #' @param ymax Maximum value for y axis
-#' @param tickDist Distance in basepairs between chromosome diagram ticks
-#' @param axisLabelMargin Size of margin between axis and its label
-#' @param mainTitleCex Scaling factor for main title
-#' @param axisLabelCex Scaling factor for axis label
-#' @param plotGenes Flag to have karyoploteR plot gene structures beneath Manhattan
-#' @param geneNamesCex Scaling factor for gene labels
-#' @param chromNamesCex Scaling factor for chromosome labels
-#' @param thirdGRanges GenomicRanges object containing data for third plot to be placed above back-to-back Manhattans
-#' @param thirdLabel Axis label for third plot
+#' @param tick_dist Distance in basepairs between chromosome diagram ticks
+#' @param axis_label_margin Size of margin between axis and its label
+#' @param main_title_cex Scaling factor for main title
+#' @param axis_label_cex Scaling factor for axis label
+#' @param plot_genes Flag to have karyoploteR plot gene structures beneath Manhattan
+#' @param gene_names_cex Scaling factor for gene labels
+#' @param chrom_names_cex Scaling factor for chromosome labels
+#' @param third_gRanges GenomicRanges object containing data for third plot to be placed above back-to-back Manhattans
+#' @param third_label Axis label for third plot
 #' @param chromosomes List of chromosomes to plot. Expects strings of the form 'chrx' where 'x' is from the set {1, 2, ..., 22, X, Y} 
 #' @param zoom Coordinates for interval to magnify. Expects a string of the form 'chrx:a-b' where x is the chromosome number a and b are basepair coordinates.
-#' @param plotParams List of named plot parameters to pass to \code{plotKaryotype}
+#' @param plot_params List of named plot parameters to pass to \code{plotKaryotype}
 #'
 #' @importFrom karyoploteR plotKaryotype kpAddBaseNumbers kpAddChromosomeNames kpAddLabels kpAxis kpPlotGenes kpPlotManhattan makeGenesDataFromTxDb addGeneNames mergeTranscripts getDefaultPlotParams
 #' @importFrom TxDb.Hsapiens.UCSC.hg38.knownGene TxDb.Hsapiens.UCSC.hg38.knownGene
@@ -29,7 +29,7 @@
 #' @export
 #' 
 #' @examples
-backToBackManhattan <- function(topGRanges, bottomGRanges, topLabel, bottomLabel, main, ymax = 15, tickDist = 1e5, axisLabelMargin = 0.03, mainTitleCex = 2.7, axisLabelCex = 1.8, plotGenes = F, geneNamesCex = 1, chromNamesCex = 2, thirdGRanges = NULL, thirdLabel = NULL, chromosomes = NULL, zoom = NULL, plotParams = getDefaultPlotParams(plot.type = 4)) {
+backToBackManhattan <- function(top_gRanges, bottom_gRanges, top_label, bottom_label, main, ymax = 15, tick_dist = 1e5, axis_label_margin = 0.03, main_title_cex = 2.7, axis_label_cex = 1.8, plot_genes = F, gene_names_cex = 1, chrom_names_cex = 2, third_gRanges = NULL, third_label = NULL, chromosomes = NULL, zoom = NULL, plot_params = getDefaultPlotParams(plot.type = 4)) {
 
   if(!is.null(chromosomes) & !is.null(zoom)) {
     stop("Cannot specify both \'chromosomes\' and \'zoom\'")
