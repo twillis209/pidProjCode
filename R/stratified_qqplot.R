@@ -39,5 +39,5 @@ stratified_qqplot <- function(data_frame, prin_value_label, cond_value_label = N
       daf <- do.call(rbind, dafs)
     }
 
-  ggplot(data=daf) + geom_line(aes(x = pp, y = negLogP, group = threshold, colour = threshold)) +geom_abline(intercept=0,slope=1, linetype="dashed")
+  ggplot(data=daf) + geom_line(aes(x = pp, y = negLogP, group = threshold, colour = threshold)) + geom_abline(intercept=0,slope=1, linetype="dashed")
 }

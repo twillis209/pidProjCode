@@ -12,6 +12,8 @@ multitrack_manhattan(
   axis_label_margin = 0.03,
   main_title_cex = 2.7,
   axis_label_cex = 1.8,
+  axis_label_offset = 0,
+  axis_tick_cex = 1,
   chrom_names_cex = 2,
   chromosomes = NULL,
   chrom_tick_dist = 1e+06,
@@ -34,6 +36,10 @@ multitrack_manhattan(
 \item{main_title_cex}{Scaling factor for main title}
 
 \item{axis_label_cex}{Scaling factor for axis label}
+
+\item{axis_label_offset}{Offset for axis label}
+
+\item{axis_tick_cex}{Scaling factor for axis ticks}
 
 \item{chrom_names_cex}{Scaling factor for chromosome labels}
 
