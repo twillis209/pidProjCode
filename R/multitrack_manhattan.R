@@ -19,6 +19,8 @@
 #' @param plot_params List of named plot parameters to pass to \code{plotKaryotype}
 #' @param track_margin Proportion of track assigned to track margin
 #'
+#' @return KaryoPlot
+#'
 #' @importFrom karyoploteR plotKaryotype kpAddBaseNumbers kpAddChromosomeNames kpAddLabels kpAxis kpPlotManhattan getDefaultPlotParams autotrack
 #' @importFrom GenomicRanges mcols mcols<-
 #' @export
@@ -57,5 +59,7 @@ multitrack_manhattan <- function(gRanges, axis_labels, main, ymax = 15, axis_lab
                         points.col = '2blues',
                         r0 = auto$r0, r1 = auto$r1,
                         ymax = ymax)
-    }
+  }
+
+  kp
 }

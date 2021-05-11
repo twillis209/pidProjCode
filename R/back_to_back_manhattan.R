@@ -25,6 +25,8 @@
 #' @param zoom Coordinates for interval to magnify. Expects a string of the form 'chrx:a-b' where x is the chromosome number a and b are basepair coordinates.
 #' @param plot_params List of named plot parameters to pass to \code{plotKaryotype}
 #'
+#' @return KaryoPlot object
+#'
 #' @importFrom karyoploteR plotKaryotype kpAddBaseNumbers kpAddChromosomeNames kpAddLabels kpAxis kpPlotGenes kpPlotManhattan makeGenesDataFromTxDb addGeneNames mergeTranscripts getDefaultPlotParams
 #' @importFrom TxDb.Hsapiens.UCSC.hg38.knownGene TxDb.Hsapiens.UCSC.hg38.knownGene
 #' @importFrom GenomicRanges mcols mcols<-
@@ -133,4 +135,6 @@ back_to_back_manhattan <- function(top_gRanges, bottom_gRanges, top_label, botto
     genes.data.merged<-mergeTranscripts(genes.data)
     kp<-kpPlotGenes(kp, data=genes.data.merged, r0=0, r1=0.18, gene.name.cex=gene_names_cex, gene.name.position='left')
   }
+
+  kp
 }
