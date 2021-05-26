@@ -34,25 +34,25 @@ multitrack_manhattan <- function(gRanges, axis_labels, main, ymax = 15, axis_lab
 
   if(!is.null(chromosomes)) {
     kp <- plotKaryotype(plot.type = 4, labels.plotter = NULL, chromosomes = chromosomes, plot.params = plot_params)
-    kpAddBaseNumbers(kp, add.units = T, cex = chrom_tick_cex, tick.dist = chrom_tick_dist)
+    kp <- kpAddBaseNumbers(kp, add.units = T, cex = chrom_tick_cex, tick.dist = chrom_tick_dist)
   } else {
     kp <- plotKaryotype(plot.type = 4, labels.plotter = NULL, plot.params = plot_params, chromosomes = paste0('chr', 1:22))
-    kpAddChromosomeNames(kp, col = 'black', srt = 90, cex = chrom_names_cex)
+    kp <- kpAddChromosomeNames(kp, col = 'black', srt = 90, cex = chrom_names_cex)
   }
 
   title(main = main, cex.main = main_title_cex)
 
   for(i in seq_along(gRanges)) {
     auto <- autotrack(current.track = i, total.tracks = length(gRanges), margin = track_margin)
-    
-    kpAddLabels(kp, labels = axis_labels[i],
+
+    kp <- kpAddLabels(kp, labels = axis_labels[i],
                 srt = 90, pos = 3,
                 r0 = auto$r0, r1 = auto$r1,
                 cex = axis_label_cex,
                 label.margin = axis_label_margin,
                 offset = axis_label_offset)
 
-    kpAxis(kp, ymin = 0, ymax = ymax,
+    kp <- kpAxis(kp, ymin = 0, ymax = ymax,
            r0 = auto$r0, r1 = auto$r1, cex = axis_tick_cex)
 
     kp <- kpPlotManhattan(kp, data = gRanges[[i]],

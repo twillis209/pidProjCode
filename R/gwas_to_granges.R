@@ -10,7 +10,13 @@
 #' 
 #' @export
 gwas_to_granges <- function(data_table, bp_label = 'BP38', chr_label = 'CHR38') {
+  chr_temp <- data_table[[chr_label]]
+
   data_table[, (chr_label) := paste0('chr', get(chr_label))]
 
-  makeGRangesFromDataFrame(data.frame(data_table), start.field = bp_label, end.field = bp_label, seqnames.field = chr_label, ignore.strand = T, keep.extra.columns = T)
+  granges <- makeGRangesFromDataFrame(data.frame(data_table), start.field = bp_label, end.field = bp_label, seqnames.field = chr_label, ignore.strand = T, keep.extra.columns = T)
+
+  data_table[, (chr_label) := chr_temp]
+
+  granges
 }
