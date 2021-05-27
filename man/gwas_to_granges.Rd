@@ -19,7 +19,7 @@ gwas_to_granges(
 
 \item{chr_label}{name of chromosome column}
 
-\item{max_p}{upper bound on p-values}
+\item{max_p}{non-inclusive upper bound on p-values}
 
 \item{min_p}{lower bound on p-values}
 }

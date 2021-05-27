@@ -3,14 +3,13 @@
 #' @param data_table data.table containing GWAS data
 #' @param bp_label name of basepair column
 #' @param chr_label name of chromosome column
-#' @param max_p upper bound on p-values
+#' @param max_p non-inclusive upper bound on p-values
 #' @param min_p lower bound on p-values
 #' 
 #' @return GenomicRanges object
 #' @importFrom GenomicRanges makeGRangesFromDataFrame
 #' @import data.table
 #'
-#' TODO upper bound is not inclusive, i.e. <= does not seem to work
 #' @export
 gwas_to_granges <- function(data_table, bp_label = 'BP38', chr_label = 'CHR38', max_p = NULL, min_p = NULL) {
   chr_temp <- data_table[[chr_label]]
