@@ -18,13 +18,15 @@
 #' @param chrom_tick_cex Scaling factor for ideogram ticks
 #' @param plot_params List of named plot parameters to pass to \code{plotKaryotype}
 #' @param track_margin Proportion of track assigned to track margin
+#' @param points.col Colours used to plot points
+#' @param points.cex Size of the point symbols
 #'
 #' @return KaryoPlot
 #'
 #' @importFrom karyoploteR plotKaryotype kpAddBaseNumbers kpAddChromosomeNames kpAddLabels kpAxis kpPlotManhattan getDefaultPlotParams autotrack
 #' @importFrom GenomicRanges mcols mcols<-
 #' @export
-multitrack_manhattan <- function(gRanges, axis_labels, main, ymax = 15, axis_label_margin = 0.03, main_title_cex = 2.7, axis_label_cex = 1.8, axis_label_offset = 0, axis_tick_cex = 1, chrom_names_cex = 2, chromosomes = NULL, chrom_tick_dist=1e6, chrom_tick_cex = 1, plot_params = getDefaultPlotParams(plot.type = 4), track_margin = 0.06) {
+multitrack_manhattan <- function(gRanges, axis_labels, main, ymax = 15, axis_label_margin = 0.03, main_title_cex = 2.7, axis_label_cex = 1.8, axis_label_offset = 0, axis_tick_cex = 1, chrom_names_cex = 2, chromosomes = NULL, chrom_tick_dist=1e6, chrom_tick_cex = 1, plot_params = getDefaultPlotParams(plot.type = 4), track_margin = 0.06, points.col = '2blues', points.cex = 1) {
 
   for(i in seq_along(gRanges)) {
     if(!any(c('P', 'p') %in% names(mcols(gRanges[[i]])))) {
@@ -56,7 +58,8 @@ multitrack_manhattan <- function(gRanges, axis_labels, main, ymax = 15, axis_lab
            r0 = auto$r0, r1 = auto$r1, cex = axis_tick_cex)
 
     kp <- kpPlotManhattan(kp, data = gRanges[[i]],
-                        points.col = '2blues',
+                          points.cex = points.cex,
+                        points.col = points.col,
                         r0 = auto$r0, r1 = auto$r1,
                         ymax = ymax)
   }
