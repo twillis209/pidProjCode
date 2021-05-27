@@ -68,6 +68,9 @@ back_to_back_manhattan(
 
 \item{plot_params}{List of named plot parameters to pass to \code{plotKaryotype}}
 }
+\value{
+KaryoPlot object
+}
 \description{
 Main back-to-back plot can be supplemented with a third plot and with gene structure diagrams.
 }

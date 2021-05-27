@@ -4,7 +4,13 @@
 \alias{gwas_to_granges}
 \title{Convert GWAS data in data.table to GenomicRanges object}
 \usage{
-gwas_to_granges(data_table, bp_label = "BP38", chr_label = "CHR38")
+gwas_to_granges(
+  data_table,
+  bp_label = "BP38",
+  chr_label = "CHR38",
+  max_p = NULL,
+  min_p = NULL
+)
 }
 \arguments{
 \item{data_table}{data.table containing GWAS data}
@@ -12,6 +18,10 @@ gwas_to_granges(data_table, bp_label = "BP38", chr_label = "CHR38")
 \item{bp_label}{name of basepair column}
 
 \item{chr_label}{name of chromosome column}
+
+\item{max_p}{upper bound on p-values}
+
+\item{min_p}{lower bound on p-values}
 }
 \value{
 GenomicRanges object

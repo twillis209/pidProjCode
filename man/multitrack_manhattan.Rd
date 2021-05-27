@@ -53,6 +53,9 @@ multitrack_manhattan(
 
 \item{track_margin}{Proportion of track assigned to track margin}
 }
+\value{
+KaryoPlot
+}
 \description{
 Writes out a list of \code{GenomicRanges} objects in a stacked Manhattan plot.
 }
