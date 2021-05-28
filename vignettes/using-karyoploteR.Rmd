@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-NB: I originally wrote this to showcase the use of `karyoploteR` with a function of my own, `createGRanges`. I've since removed this from my package, `pidProjCode`, as I discovered `GenomicRanges` provides a perfectly serviceable function of its own to this end, `makeGRangesFromDataFrame`. This vignette now serves to illustrate use of `karyoploteR` in a GWAS setting, in particular when working with sets of summary statistics. It also depicts the use of some convenience functions I have gathered together in `pidProjCode`. Installing what was only meant to be a toy package would be silly, though, so I encourage anyone who thinks a function like `backToBackManhattan` could be useful to simply copy
+NB: I originally wrote this to showcase the use of `karyoploteR` with a function of my own, `createGRanges`. I've since removed this from my package, `pidProjCode`, as I discovered `GenomicRanges` provides a perfectly serviceable function of its own to this end, `makeGRangesFromDataFrame`. This vignette now serves to illustrate use of `karyoploteR` in a GWAS setting, in particular when working with sets of summary statistics. It also depicts the use of some convenience functions I have gathered together in `pidProjCode`. Installing what was only meant to be a toy package would be silly, though, so I encourage anyone who thinks a function like `back_to_back_manhattan` could be useful to simply copy
 [the source code from my package's GitHub repo.](https://github.com/twillis209/pidProjCode)
 
 
@@ -109,7 +109,7 @@ genes.data.merged <- mergeTranscripts(genes.data)
 kp <- kpPlotGenes(kp, data = genes.data.merged, r0 = 0, r1 = 0.2, gene.name.cex = 0.8, gene.name.position = 'left')
 ```
 
-```{r backToBackManhattans}
+```{r back_to_back_manhattans}
 cex.label <- 1.0
 
 kp <- plotKaryotype(plot.type = 4, labels.plotter = NULL, zoom = "chr6:25e6-36e6", plot.params = pp)
@@ -220,18 +220,22 @@ kp <- kpPlotManhattan(kp, data = pidGRanges, r0 = 0.5, r1 = 0, ymax = 10, points
 legend(x = "topright", fill = c("#6caeff", "#2b5d9b"), legend = c("IgAD", "PID"))
 ```
 
+<<<<<<< HEAD
 ## `backToBackManhattan`
+=======
+## Using `back_to_back_manhattan`
+>>>>>>> 734f7eb89c3f641a70076d4def02851bb85285be
 
-I have written a convenience function, `backToBackManhattan`, for drawing 'back-to-back' Manhattan plots with `karyoploteR`. These plots allow one to compare results from two GWAS. The function itself does nothing clever and was written merely to save my having to copy and tweak the same boilerplate plotting code over and over.
+I have written a convenience function, `back_to_back_manhattan`, for drawing 'back-to-back' Manhattan plots with `karyoploteR`. These plots allow one to compare results from two GWAS. The function itself does nothing clever and was written merely to save my having to copy and tweak the same boilerplate plotting code over and over.
 
-In my own work I have had cause to plot (transformed) GWAS results in this manner in order to assess two competing conditional FDR methods, `cfdr` and `fcfdr`. These condition p-values for the association of SNPs with a principal trait upon p-values for the association of the same SNPs with some informative auxiliary trait, and produce p-value-like 'v-values'. In this use case, it can be useful to have to hand the original principal trait p-values, so `backToBackManhattan` allows one to specify a third Manhattan.
+In my own work I have had cause to plot (transformed) GWAS results in this manner in order to assess two competing conditional FDR methods, `cfdr` and `fcfdr`. These condition p-values for the association of SNPs with a principal trait upon p-values for the association of the same SNPs with some informative auxiliary trait, and produce p-value-like 'v-values'. In this use case, it can be useful to have to hand the original principal trait p-values, so `back_to_back_manhattan` allows one to specify a third Manhattan.
 
-With `backToBackManhattan` one can draw:
+With `back_to_back_manhattan` one can draw:
 - whole-genome Manhattans
 - results from a selection of chromosomes (see the `chromosomes` argument)
 - a Manhattan which magnifies an interval on a single chromosome (see the `zoom` argument)
 
-In addition, the `plotGenes` flag has `karyoploteR` draw gene structures on the lowermost track. At the moment this works only when the `zoom` argument is specified because it takes a long time to draw the genes and the larger the interval, the longer the plotting time. Varying the size of the interval in on which you have `zoom`ed should give you a sense of what is a sensible interval. Longer intervals also lead to the gene track getting rather busy, which is no help if you are trying to pick out the genes in which your SNPs of interest lie.
+In addition, the `plot_genes` flag has `karyoploteR` draw gene structures on the lowermost track. At the moment this works only when the `zoom` argument is specified because it takes a long time to draw the genes and the larger the interval, the longer the plotting time. Varying the size of the interval in on which you have `zoom`ed should give you a sense of what is a sensible interval. Longer intervals also lead to the gene track getting rather busy, which is no help if you are trying to pick out the genes in which your SNPs of interest lie.
 
 ```{r wholeGenomeManhattan, fig.width = 7}
 
@@ -248,27 +252,27 @@ pp$rightmargin <- 0.1
 igadGRanges <- subset(igadGRanges, P > 1e-15)
 sleGRanges <- subset(sleGRanges, P > 1e-15)
 
-backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='PID and IgAD', axisLabelCex=1, axisLabelMargin = label.margin, mainTitleCex = cex.main, plotParams = pp, chromNamesCex = chrom.names.cex, ymax = 15)
+back_to_back_manhattan(pidGRanges, igadGRanges, top_label='PID', bottom_label='IgAD', main='PID and IgAD', axis_label_cex=1, axis_label_margin = label.margin, main_title_cex = cex.main, plot_params = pp, chrom_names_cex = chrom.names.cex, ymax = 15)
 ```
 
 ```{r singleChromosomeManhattan}
-backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6', chromosomes='chr6', tickDist=5e7, axisLabelCex=1, axisLabelMargin = label.margin, mainTitleCex = cex.main, plotParams = pp)
+back_to_back_manhattan(pidGRanges, igadGRanges, top_label='PID', bottom_label='IgAD', main='Chromosome 6', chromosomes='chr6', tick_dist=5e7, axis_label_cex=1, axis_label_margin = label.margin, main_title_cex = cex.main, plot_params = pp)
 ```
 
 ```{r singleChromosomeThreeTracksManhattan}
-backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', thirdLabel = 'SLE', thirdGRanges = sleGRanges, main='Chromosome 6', chromosomes='chr6', tickDist=3e7, axisLabelCex=1, axisLabelMargin = label.margin, mainTitleCex = cex.main, plotParams = pp)
+back_to_back_manhattan(pidGRanges, igadGRanges, top_label='PID', bottom_label='IgAD', third_label = 'SLE', third_gRanges = sleGRanges, main='Chromosome 6', chromosomes='chr6', tick_dist=3e7, axis_label_cex=1, axis_label_margin = label.margin, main_title_cex = cex.main, plot_params = pp)
 ```
 
 ```{r zoomedManhattanBackToBack}
-backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-36e6', tickDist=2e6, axisLabelCex=1, axisLabelMargin= label.margin, mainTitleCex = cex.main, plotParams = pp)
+back_to_back_manhattan(pidGRanges, igadGRanges, top_label='PID', bottom_label='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-36e6', tick_dist=2e6, axis_label_cex=1, axis_label_margin= label.margin, main_title_cex = cex.main, plot_params = pp)
 ```
 
 ```{r zoomedManhattanWithGenes}
-backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=2e5, plotGenes=T, axisLabelCex=1, axisLabelMargin = label.margin, mainTitleCex = cex.main, plotParams = pp, geneNamesCex = 0.7)
+back_to_back_manhattan(pidGRanges, igadGRanges, top_label='PID', bottom_label='IgAD', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tick_dist=2e5, plot_genes=T, axis_label_cex=1, axis_label_margin = label.margin, main_title_cex = cex.main, plot_params = pp, gene_names_cex = 0.7)
 ```
 
 ```{r zoomedManhattanWithThreeTracksAndGenes}
-backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', thirdGRanges=sleGRanges, thirdLabel='SLE', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=2e5, plotGenes=T, axisLabelCex=1, axisLabelMargin=label.margin, mainTitleCex = cex.main, plotParams = pp, geneNamesCex = 0.7)
+back_to_back_manhattan(pidGRanges, igadGRanges, top_label='PID', bottom_label='IgAD', third_gRanges=sleGRanges, third_label='SLE', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tick_dist=2e5, plot_genes=T, axis_label_cex=1, axis_label_margin=label.margin, main_title_cex = cex.main, plot_params = pp, gene_names_cex = 0.7)
 ```
 
 ### `multitrack_manhattan`
@@ -303,3 +307,26 @@ multitrack_manhattan(gRanges = list(pidGRanges, igadGRanges, sleGRanges, ucGRang
                      chrom_tick_dist = 5e7,
                      plot_params = pp)
 ```
+
+### Saving time when fiddling with parameters
+
+A process of trial and error is usually necessary to tune the parameters of a `karyoploteR` plot. Given that the number of points on a Manhattan plot routinely runs into the millions, if the parameters you wish to tune do not relate to the points (e.g. point size, style, or colour) you can save time by passing an empty `GenomicRanges` object with a single (empty) `P` metadata column. The plot will then be drawn without points, which should save a considerable amount of time and allow you to iterate more quickly.
+
+```{r emptyGenomicRanges_one}
+axis_label_margin <- -0.05
+
+emptyGRanges <- GRanges(P = numeric())
+
+multitrack_manhattan(list(emptyGRanges), axis_labels = list('-log10(p)'), main = 'The virtues of an empty GenomicRanges object', axis_label_margin = axis_label_margin, chrom_names_cex = 0.9, track_margin = 0.18, main_title_cex = 1.1, axis_label_cex = 1.5, axis_tick_cex = 0.7, chrom_tick_dist = 5e7, plot_params = pp)
+```
+
+Boooooo! Our axis label is in the wrong place. 
+
+```{r emptyGenomicRanges_two}
+axis_label_margin <- 0.05
+
+multitrack_manhattan(list(emptyGRanges), axis_labels = list('-log10(p)'), main = 'The virtues of an empty GenomicRanges object', axis_label_margin = axis_label_margin, chrom_names_cex = 0.9, track_margin = 0.18, main_title_cex = 1.1, axis_label_cex = 1.5, axis_tick_cex = 0.7, chrom_tick_dist = 5e7, plot_params = pp)
+```
+
+That's better.
+

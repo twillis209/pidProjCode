@@ -12,6 +12,8 @@ multitrack_manhattan(
   axis_label_margin = 0.03,
   main_title_cex = 2.7,
   axis_label_cex = 1.8,
+  axis_label_offset = 0,
+  axis_tick_cex = 1,
   chrom_names_cex = 2,
   chromosomes = NULL,
   chrom_tick_dist = 1e+06,
@@ -35,6 +37,10 @@ multitrack_manhattan(
 
 \item{axis_label_cex}{Scaling factor for axis label}
 
+\item{axis_label_offset}{Offset for axis label}
+
+\item{axis_tick_cex}{Scaling factor for axis ticks}
+
 \item{chrom_names_cex}{Scaling factor for chromosome labels}
 
 \item{chromosomes}{List of chromosomes to plot. Expects strings of the form 'chrx' where 'x' is from the set {1, 2, ..., 22, X, Y}}
@@ -46,6 +52,9 @@ multitrack_manhattan(
 \item{plot_params}{List of named plot parameters to pass to \code{plotKaryotype}}
 
 \item{track_margin}{Proportion of track assigned to track margin}
+}
+\value{
+KaryoPlot
 }
 \description{
 Writes out a list of \code{GenomicRanges} objects in a stacked Manhattan plot.

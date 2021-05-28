@@ -14,7 +14,7 @@ Suggests:
     testthat (>= 3.0.0),
     knitr,
     rmarkdown,
-    data.table
+    bivariate
 Config/testthat/edition: 3
 Imports: 
     GenomicRanges,
@@ -25,5 +25,13 @@ Imports:
     karyoploteR,
     TxDb.Hsapiens.UCSC.hg38.knownGene,
     org.Hs.eg.db,
-    ggplot2
+    ggplot2,
+    data.table,
+    Rcpp,
+    RcppParallel
 VignetteBuilder: knitr
+LinkingTo: 
+    Rcpp,
+    RcppParallel
+SystemRequirements:
+    GNU make
