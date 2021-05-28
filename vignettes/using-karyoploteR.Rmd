@@ -270,3 +270,27 @@ back_to_back_manhattan(pidGRanges, igadGRanges, top_label='PID', bottom_label='I
 ```{r zoomedManhattanWithThreeTracksAndGenes}
 back_to_back_manhattan(pidGRanges, igadGRanges, top_label='PID', bottom_label='IgAD', third_gRanges=sleGRanges, third_label='SLE', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tick_dist=2e5, plot_genes=T, axis_label_cex=1, axis_label_margin=label.margin, main_title_cex = cex.main, plot_params = pp, gene_names_cex = 0.7)
 ```
+
+## Saving time when fiddling with parameters
+
+A process of trial and error is usually necessary to tune the parameters of a `karyoploteR` plot. Given that the number of points on a Manhattan plot routinely runs into the millions, if the parameters you wish to tune do not relate to the points (e.g. point size, style, or colour) you can save time by passing an empty `GenomicRanges` object with a single (empty) `P` metadata column. The plot will then be drawn without points, which should save a considerable amount of time and allow you to iterate more quickly.
+
+```{r emptyGenomicRanges_one}
+library(GenomicRanges)
+
+axis_label_margin <- -0.05
+
+emptyGRanges <- GenomicRanges(P = numeric())
+
+multitrack_manhattan(list(emptyGRanges), axis_labels = list('-log10(p)'), main = 'The virtues of an empty GenomicRanges object', axis_label_margin = axis_label_margin)
+```
+
+Boooooo! Our axis label is in the wrong place. 
+
+```{r emptyGenomicRanges_two}
+axis_label_margin <- 0.05
+
+multitrack_manhattan(list(emptyGRanges), axis_labels = list('-log10(p)'), main = 'The virtues of an empty GenomicRanges object', axis_label_margin = axis_label_margin)
+```
+
+That's better.

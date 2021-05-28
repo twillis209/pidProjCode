@@ -7,7 +7,7 @@
 #' @param axis_labels List of axis labels
 #' @param main Main title
 #' @param ymax Maximum value for y axes
-#' @param axis_label_margin Size of margin between axis and its label
+#' @param axis_label_margin Size of margin between axis and its label (distance between axis and axis label)
 #' @param main_title_cex Scaling factor for main title
 #' @param axis_label_cex Scaling factor for axis label
 #' @param axis_label_offset Offset for axis label
