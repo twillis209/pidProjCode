@@ -220,7 +220,7 @@ kp <- kpPlotManhattan(kp, data = pidGRanges, r0 = 0.5, r1 = 0, ymax = 10, points
 legend(x = "topright", fill = c("#6caeff", "#2b5d9b"), legend = c("IgAD", "PID"))
 ```
 
-## Using `backToBackManhattan`
+## `backToBackManhattan`
 
 I have written a convenience function, `backToBackManhattan`, for drawing 'back-to-back' Manhattan plots with `karyoploteR`. These plots allow one to compare results from two GWAS. The function itself does nothing clever and was written merely to save my having to copy and tweak the same boilerplate plotting code over and over.
 
@@ -269,4 +269,37 @@ backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD',
 
 ```{r zoomedManhattanWithThreeTracksAndGenes}
 backToBackManhattan(pidGRanges, igadGRanges, topLabel='PID', bottomLabel='IgAD', thirdGRanges=sleGRanges, thirdLabel='SLE', main='Chromosome 6, 25M-26M', zoom='chr6:25e6-26e6', tickDist=2e5, plotGenes=T, axisLabelCex=1, axisLabelMargin=label.margin, mainTitleCex = cex.main, plotParams = pp, geneNamesCex = 0.7)
+```
+
+### `multitrack_manhattan`
+
+This function allows one to draw a plot of stacked Manhattans, all regularly oriented.
+
+```{r multitrack_manhattan}
+multitrack_manhattan(gRanges = list(pidGRanges, igadGRanges, sleGRanges, ucGRanges),
+                     axis_labels = c('PID', 'IgAD', 'SLE', 'UC'),
+                     main = 'PID, IgAD, SLE, and UC', 
+                     chrom_names_cex = 1.1,
+                     track_margin = 0.18,
+                     main_title_cex = 1.1,
+                     axis_label_margin = 0.06,
+                     axis_tick_cex = 0.7,
+                     axis_label_cex = 1.5,
+                     plot_params = pp)
+```
+
+```{r multitrack_manhattan_chr6}
+
+multitrack_manhattan(gRanges = list(pidGRanges, igadGRanges, sleGRanges, ucGRanges),
+                     axis_labels = c('PID', 'IgAD', 'SLE', 'UC'),
+                     chromosomes = 'chr6',
+                     main = 'PID, IgAD, SLE, and UC, chr6', 
+                     chrom_names_cex = 0.9,
+                     track_margin = 0.18,
+                     main_title_cex = 1.1,
+                     axis_label_margin = 0.06,
+                     axis_label_cex = 1.5,
+                     axis_tick_cex = 0.7,
+                     chrom_tick_dist = 5e7,
+                     plot_params = pp)
 ```
