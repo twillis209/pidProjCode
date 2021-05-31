@@ -231,3 +231,20 @@ test_that("\'Zoomed\' Manhattan with three plots is drawn with genes", {
 
   expect_equal(2, 1+1)
 })
+
+test_that("Single-track Manhattan is drawn with highlights", {
+  pidDat <- data.table::fread(file=system.file('extdata', 'pidGwas.tsv.gz', package='pidProjCode', mustWork = T), sep = '\t', header = T)
+
+  pidDat <- subset(pidDat, -log10(P) < 15)
+  pidDatSuggestive <- subset(pidDat, -log10(P) > 5 & -log10(P) < -log10(5e-8))
+
+  pidDat$CHR38 <- paste0('chr', pidDat$CHR38)
+  pidDatSuggestive$CHR38 <- paste0('chr', pidDatSuggestive$CHR38)
+
+  pidGRanges <- GenomicRanges::makeGRangesFromDataFrame(data.frame(pidDat), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
+  pidSuggestiveGRanges <- GenomicRanges::makeGRangesFromDataFrame(data.frame(pidDatSuggestive), start.field = 'BP38', end.field = 'BP38', seqnames.field = 'CHR38', ignore.strand = T, keep.extra.columns = T)
+
+  multitrack_manhattan(gRanges = list(pidGRanges), axis_labels = list('PID'), main = 'PID with suggestive SNPs highlighted', highlights = list(pidSuggestiveGRanges), highlight.cols = list('greenyellow'))
+
+  expect_equal(2, 1+1)
+})

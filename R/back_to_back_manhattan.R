@@ -28,6 +28,12 @@
 #' @param bottom_gRanges_points.col Colours used to plot the points in bottom_gRanges
 #' @param third_gRanges_points.col Colours used to plot the points in third_gRanges
 #' @param points.cex Size of the point symbols
+#' @param top_highlight (GRanges, character vector, logical vector or numeric vector) The points to highlight in a different color in the top plot. If a GRanges (or anythng accepted by toGRanges) the points overlapping these regions will be highlighted. Otherwise the points will be selected with data[highlight]. If NULL no point will be highlighted. (defaults to NULL) [param description from karyoploteR::kpPlotManhattan]
+#' @param bottom_highlight (GRanges, character vector, logical vector or numeric vector) The points to highlight in a different color in the bottom plot. If a GRanges (or anythng accepted by toGRanges) the points overlapping these regions will be highlighted. Otherwise the points will be selected with data[highlight]. If NULL no point will be highlighted. (defaults to NULL) [param description from karyoploteR::kpPlotManhattan]
+#' @param third_highlight (GRanges, character vector, logical vector or numeric vector) The points to highlight in a different color in the third plot. If a GRanges (or anythng accepted by toGRanges) the points overlapping these regions will be highlighted. Otherwise the points will be selected with data[highlight]. If NULL no point will be highlighted. (defaults to NULL) [param description from karyoploteR::kpPlotManhattan]
+#' @param top_highlight.col Top plot highlight colour
+#' @param bottom_highlight.col Bottom plot highlight colour
+#' @param third_highlight.col Third plot highlight colour
 #'
 #' @return KaryoPlot object
 #'
@@ -37,7 +43,7 @@
 #' @export
 #' 
 #' @examples
-back_to_back_manhattan <- function(top_gRanges, bottom_gRanges, top_label, bottom_label, main, ymax = 15, tick_dist = 1e5, axis_label_margin = 0.03, main_title_cex = 2.7, axis_label_cex = 1.8, axis_label_offset = 0, axis_tick_cex = 1, plot_genes = F, gene_names_cex = 1, chrom_names_cex = 2, third_gRanges = NULL, third_label = NULL, chromosomes = NULL, zoom = NULL, plot_params = getDefaultPlotParams(plot.type = 4), top_gRanges_points.col = '2blues', bottom_gRanges_points.col = '2blues', third_gRanges_points.col = '2blues', points.cex = 1) {
+back_to_back_manhattan <- function(top_gRanges, bottom_gRanges, top_label, bottom_label, main, ymax = 15, tick_dist = 1e5, axis_label_margin = 0.03, main_title_cex = 2.7, axis_label_cex = 1.8, axis_label_offset = 0, axis_tick_cex = 1, plot_genes = F, gene_names_cex = 1, chrom_names_cex = 2, third_gRanges = NULL, third_label = NULL, chromosomes = NULL, zoom = NULL, plot_params = getDefaultPlotParams(plot.type = 4), top_gRanges_points.col = '2blues', bottom_gRanges_points.col = '2blues', third_gRanges_points.col = '2blues', points.cex = 1, top_highlight = NULL, bottom_highlight = NULL, third_highlight = NULL, top_highlight.col = 'greenyellow', bottom_highlight.col = 'greenyellow', third_highlight.col = 'greenyellow') {
 
   if(!is.null(chromosomes) & !is.null(zoom)) {
     stop("Cannot specify both \'chromosomes\' and \'zoom\'")
@@ -82,53 +88,57 @@ back_to_back_manhattan <- function(top_gRanges, bottom_gRanges, top_label, botto
       # two tracks, plot genes
       kp <- kpAddLabels(kp, labels = top_label, srt=90, pos=3, r0=0.6, r1=1, cex=axis_label_cex, label.margin = axis_label_margin, offset = axis_label_offset)
       kp <- kpAxis(kp, ymin=0, ymax=ymax, r0=0.6, r1=1, cex = axis_tick_cex)
-      kp <- kpPlotManhattan(kp, data = top_gRanges, r0 = 0.6, r1 = 1, ymax = ymax, points.cex = points.cex, points.col = top_gRanges_points.col)
+      kp <- kpPlotManhattan(kp, data = top_gRanges, r0 = 0.6, r1 = 1, ymax = ymax, points.cex = points.cex, points.col = top_gRanges_points.col, highlight = top_highlight, highlight.col = top_highlight.col)
 
       kp <- kpAddLabels(kp, labels = bottom_label, srt=90, pos=3, r0=0.6, r1=0.2, cex=axis_label_cex, label.margin = axis_label_margin, offset = axis_label_offset)
       # Note how r0 and r1 are flipped here for kpAxis and kpPlotManhattan
       kp <- kpAxis(kp, ymin=0, ymax=ymax, r0=0.6, r1=0.2, cex = axis_tick_cex)
-      kp <- kpPlotManhattan(kp, data=bottom_gRanges, r0=0.6, r1=0.2, ymax=ymax, points.cex = points.cex, points.col = bottom_gRanges_points.col)
+      kp <- kpPlotManhattan(kp, data=bottom_gRanges, r0=0.6, r1=0.2, ymax=ymax, points.cex = points.cex, points.col = bottom_gRanges_points.col, highlight = bottom_highlight, highlight.col = bottom_highlight.col)
+
     } else {
       # two tracks, do not plot genes
       kp <- kpAddLabels(kp, labels = top_label, srt=90, pos=3, r0=0.5, r1=1, cex=axis_label_cex, label.margin = axis_label_margin, offset = axis_label_offset)
       kp <- kpAxis(kp, ymin=0, ymax=ymax, r0=0.5, r1=1, cex = axis_tick_cex)
-      kp <- kpPlotManhattan(kp, data=top_gRanges, r0=0.5, r1=1, ymax=ymax, points.cex = points.cex, points.col = top_gRanges_points.col)
+      kp <- kpPlotManhattan(kp, data=top_gRanges, r0=0.5, r1=1, ymax=ymax, points.cex = points.cex, points.col = top_gRanges_points.col, highlight = top_highlight, highlight.col = top_highlight.col)
+
 
       kp <- kpAddLabels(kp, labels = bottom_label, srt=90, pos=3, r0=0, r1=0.5, cex=axis_label_cex, label.margin = axis_label_margin, offset = axis_label_offset)
       # Note how r0 and r1 are flipped here for kpAxis and kpPlotManhattan
       kp <- kpAxis(kp, ymin=0, ymax=ymax, r0=0.5, r1=0, cex = axis_tick_cex)
-      kp <- kpPlotManhattan(kp, data=bottom_gRanges, r0=0.5, r1=0, ymax=ymax, points.cex = points.cex, points.col = bottom_gRanges_points.col)
+      kp <- kpPlotManhattan(kp, data=bottom_gRanges, r0=0.5, r1=0, ymax=ymax, points.cex = points.cex, points.col = bottom_gRanges_points.col, highlight = bottom_highlight, highlight.col = bottom_highlight.col)
     }
   } else {
     if(plot_genes) {
       # Three-track Manhattan, plot genes
       kp <- kpAddLabels(kp, labels = third_label, srt=90, pos=3, r0=0.8, r1=1, cex=axis_label_cex, label.margin = axis_label_margin, offset = axis_label_offset)
       kp <- kpAxis(kp, ymin=0, ymax=ymax, r0=0.8, r1=1, cex = axis_tick_cex)
-      kp <- kpPlotManhattan(kp, data=third_gRanges, r0=0.8, r1=1, ymax=ymax, points.cex = points.cex, points.col = third_gRanges_points.col)
+      kp <- kpPlotManhattan(kp, data=third_gRanges, r0=0.8, r1=1, ymax=ymax, points.cex = points.cex, points.col = third_gRanges_points.col, highlight = third_highlight, highlight.col = third_highlight.col)
+
 
       kp <- kpAddLabels(kp, labels = top_label, srt=90, pos=3, r0=0.46, r1=0.72, cex=axis_label_cex, label.margin = axis_label_margin, offset = axis_label_offset)
       kp <- kpAxis(kp, ymin=0, ymax=ymax, r0=0.46, r1=0.72, cex = axis_tick_cex)
-      kp <- kpPlotManhattan(kp, data=top_gRanges, r0=0.46, r1=0.72, ymax=ymax, points.cex = points.cex, points.col = top_gRanges_points.col)
+      kp <- kpPlotManhattan(kp, data=top_gRanges, r0=0.46, r1=0.72, ymax=ymax, points.cex = points.cex, points.col = top_gRanges_points.col, highlight = top_highlight, highlight.col = top_highlight.col)
+
 
       kp <- kpAddLabels(kp, labels = bottom_label, srt=90, pos=3, r0=0.2, r1=0.46, cex=axis_label_cex, label.margin = axis_label_margin, offset = axis_label_offset)
       # Note how r0 and r1 are flipped here for kpAxis and kpPlotManhattan
       kp <- kpAxis(kp, ymin=0, ymax=ymax, r0=0.46, r1=0.2, cex = axis_tick_cex)
-      kp <- kpPlotManhattan(kp, data=bottom_gRanges, r0=0.46, r1=0.2, ymax=ymax, points.cex = points.cex, points.col = bottom_gRanges_points.col)
+      kp <- kpPlotManhattan(kp, data=bottom_gRanges, r0=0.46, r1=0.2, ymax=ymax, points.cex = points.cex, points.col = bottom_gRanges_points.col, highlight = bottom_highlight, highlight.col = bottom_highlight.col)
+
     } else {
       # Three-track Manhattan
       kp <- kpAddLabels(kp, labels = third_label, srt=90, pos=3, r0=0.7, r1=1, cex=axis_label_cex, label.margin = axis_label_margin, offset = axis_label_offset)
       kp <- kpAxis(kp, ymin=0, ymax=ymax, r0=0.7, r1=1, cex = axis_tick_cex)
-      kp <- kpPlotManhattan(kp, data=third_gRanges, r0=0.7, r1=1, ymax=ymax, points.cex = points.cex, points.col = third_gRanges_points.col)
+      kp <- kpPlotManhattan(kp, data=third_gRanges, r0=0.7, r1=1, ymax=ymax, points.cex = points.cex, points.col = third_gRanges_points.col, highlight = third_highlight, highlight.col = third_highlight.col)
 
       kp <- kpAddLabels(kp, labels = top_label, srt=90, pos=3, r0=0.33, r1=0.66, cex=axis_label_cex, label.margin = axis_label_margin, offset = axis_label_offset)
       kp <- kpAxis(kp, ymin=0, ymax=ymax, r0=0.33, r1=0.66, cex = axis_tick_cex)
-      kp <- kpPlotManhattan(kp, data=top_gRanges, r0=0.33, r1=0.66, ymax=ymax, points.cex = points.cex, points.col = top_gRanges_points.col)
+      kp <- kpPlotManhattan(kp, data=top_gRanges, r0=0.33, r1=0.66, ymax=ymax, points.cex = points.cex, points.col = top_gRanges_points.col, highlight = top_highlight, highlight.col = top_highlight.col)
 
       kp <- kpAddLabels(kp, labels = bottom_label, srt=90, pos=3, r0=0, r1=0.33, cex=axis_label_cex, label.margin = axis_label_margin, offset = axis_label_offset)
       # Note how r0 and r1 are flipped here for kpAxis and kpPlotManhattan
       kp <- kpAxis(kp, ymin=0, ymax=ymax, r0=0.33, r1=0, cex = axis_tick_cex)
-      kp <- kpPlotManhattan(kp, data=bottom_gRanges, r0=0.33, r1=0, ymax=ymax, points.cex = points.cex, points.col = bottom_gRanges_points.col)
-
+      kp <- kpPlotManhattan(kp, data=bottom_gRanges, r0=0.33, r1=0, ymax=ymax, points.cex = points.cex, points.col = bottom_gRanges_points.col, highlight = bottom_highlight, highlight.col = bottom_highlight.col)
       }
   }
 

@@ -20,13 +20,15 @@
 #' @param track_margin Proportion of track assigned to track margin
 #' @param points.col Colours used to plot points
 #' @param points.cex Size of the point symbols
+#' @param highlights List of GRanges, or character, numeric, or logical vectors giving the points to highlight in a different color in the top plot. If a GRanges (or anythng accepted by toGRanges) the points overlapping these regions will be highlighted. Otherwise the points will be selected with data[highlight]. If NULL no point will be highlighted. (defaults to NULL) [param description from karyoploteR::kpPlotManhattan]
+#' @param highlight.cols Colours for each highlight
 #'
 #' @return KaryoPlot
 #'
 #' @importFrom karyoploteR plotKaryotype kpAddBaseNumbers kpAddChromosomeNames kpAddLabels kpAxis kpPlotManhattan getDefaultPlotParams autotrack
 #' @importFrom GenomicRanges mcols mcols<-
 #' @export
-multitrack_manhattan <- function(gRanges, axis_labels, main, ymax = 15, axis_label_margin = 0.03, main_title_cex = 2.7, axis_label_cex = 1.8, axis_label_offset = 0, axis_tick_cex = 1, chrom_names_cex = 2, chromosomes = NULL, chrom_tick_dist=1e6, chrom_tick_cex = 1, plot_params = getDefaultPlotParams(plot.type = 4), track_margin = 0.06, points.col = '2blues', points.cex = 1) {
+multitrack_manhattan <- function(gRanges, axis_labels, main, ymax = 15, axis_label_margin = 0.03, main_title_cex = 2.7, axis_label_cex = 1.8, axis_label_offset = 0, axis_tick_cex = 1, chrom_names_cex = 2, chromosomes = NULL, chrom_tick_dist=1e6, chrom_tick_cex = 1, plot_params = getDefaultPlotParams(plot.type = 4), track_margin = 0.06, points.col = '2blues', points.cex = 1, highlights = NULL, highlight.cols = NULL) {
 
   for(i in seq_along(gRanges)) {
     if(!any(c('P', 'p') %in% names(mcols(gRanges[[i]])))) {
@@ -47,6 +49,10 @@ multitrack_manhattan <- function(gRanges, axis_labels, main, ymax = 15, axis_lab
   for(i in seq_along(gRanges)) {
     auto <- autotrack(current.track = i, total.tracks = length(gRanges), margin = track_margin)
 
+    highlight <- ifelse(is.null(highlights), NULL, highlights[[i]])
+
+    highlight.col <- ifelse(is.null(highlight.cols), NULL, highlight.cols[[i]])
+
     kp <- kpAddLabels(kp, labels = axis_labels[i],
                 srt = 90, pos = 3,
                 r0 = auto$r0, r1 = auto$r1,
@@ -61,7 +67,9 @@ multitrack_manhattan <- function(gRanges, axis_labels, main, ymax = 15, axis_lab
                           points.cex = points.cex,
                         points.col = points.col,
                         r0 = auto$r0, r1 = auto$r1,
-                        ymax = ymax)
+                        ymax = ymax,
+                        highlight = highlight,
+                        highlight.col = highlight.col)
   }
 
   kp
