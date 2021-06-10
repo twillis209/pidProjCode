@@ -49,10 +49,6 @@ multitrack_manhattan <- function(gRanges, axis_labels, main, ymax = 15, axis_lab
   for(i in seq_along(gRanges)) {
     auto <- autotrack(current.track = i, total.tracks = length(gRanges), margin = track_margin)
 
-    highlight <- ifelse(is.null(highlights), NULL, highlights[[i]])
-
-    highlight.col <- ifelse(is.null(highlight.cols), NULL, highlight.cols[[i]])
-
     kp <- kpAddLabels(kp, labels = axis_labels[i],
                 srt = 90, pos = 3,
                 r0 = auto$r0, r1 = auto$r1,
@@ -62,14 +58,21 @@ multitrack_manhattan <- function(gRanges, axis_labels, main, ymax = 15, axis_lab
 
     kp <- kpAxis(kp, ymin = 0, ymax = ymax,
            r0 = auto$r0, r1 = auto$r1, cex = axis_tick_cex)
-
-    kp <- kpPlotManhattan(kp, data = gRanges[[i]],
-                          points.cex = points.cex,
-                        points.col = points.col,
-                        r0 = auto$r0, r1 = auto$r1,
-                        ymax = ymax,
-                        highlight = highlight,
-                        highlight.col = highlight.col)
+    if(is.null(highlights)) {
+      kp <- kpPlotManhattan(kp, data = gRanges[[i]],
+                            points.cex = points.cex,
+                          points.col = points.col,
+                          r0 = auto$r0, r1 = auto$r1,
+                          ymax = ymax)
+    } else {
+      kp <- kpPlotManhattan(kp, data = gRanges[[i]],
+                            points.cex = points.cex,
+                            points.col = points.col,
+                            r0 = auto$r0, r1 = auto$r1,
+                            ymax = ymax,
+                            highlight = highlights[[i]],
+                            highlight.col = highlight.cols[[i]])
+      }
   }
 
   kp
