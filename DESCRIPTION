@@ -28,7 +28,8 @@ Imports:
     ggplot2,
     data.table,
     Rcpp,
-    RcppParallel
+    RcppParallel,
+    argparse
 VignetteBuilder: knitr
 LinkingTo: 
     Rcpp,

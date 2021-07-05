@@ -28,9 +28,9 @@
 #' @param bottom_gRanges_points.col Colours used to plot the points in bottom_gRanges
 #' @param third_gRanges_points.col Colours used to plot the points in third_gRanges
 #' @param points.cex Size of the point symbols
-#' @param top_highlight (GRanges, character vector, logical vector or numeric vector) The points to highlight in a different color in the top plot. If a GRanges (or anythng accepted by toGRanges) the points overlapping these regions will be highlighted. Otherwise the points will be selected with data[highlight]. If NULL no point will be highlighted. (defaults to NULL) [param description from karyoploteR::kpPlotManhattan]
-#' @param bottom_highlight (GRanges, character vector, logical vector or numeric vector) The points to highlight in a different color in the bottom plot. If a GRanges (or anythng accepted by toGRanges) the points overlapping these regions will be highlighted. Otherwise the points will be selected with data[highlight]. If NULL no point will be highlighted. (defaults to NULL) [param description from karyoploteR::kpPlotManhattan]
-#' @param third_highlight (GRanges, character vector, logical vector or numeric vector) The points to highlight in a different color in the third plot. If a GRanges (or anythng accepted by toGRanges) the points overlapping these regions will be highlighted. Otherwise the points will be selected with data[highlight]. If NULL no point will be highlighted. (defaults to NULL) [param description from karyoploteR::kpPlotManhattan]
+#' @param top_highlight (GRanges, character vector, logical vector or numeric vector) The points to highlight in a different color in the top plot. If a GRanges (or anythng accepted by toGRanges) the points overlapping these regions will be highlighted. Otherwise the points will be selected with data[highlight]. If NULL no point will be highlighted. (defaults to NULL)
+#' @param bottom_highlight (GRanges, character vector, logical vector or numeric vector) The points to highlight in a different color in the bottom plot. If a GRanges (or anythng accepted by toGRanges) the points overlapping these regions will be highlighted. Otherwise the points will be selected with data[highlight]. If NULL no point will be highlighted. (defaults to NULL)
+#' @param third_highlight (GRanges, character vector, logical vector or numeric vector) The points to highlight in a different color in the third plot. If a GRanges (or anythng accepted by toGRanges) the points overlapping these regions will be highlighted. Otherwise the points will be selected with data[highlight]. If NULL no point will be highlighted. (defaults to NULL)
 #' @param top_highlight.col Top plot highlight colour
 #' @param bottom_highlight.col Bottom plot highlight colour
 #' @param third_highlight.col Third plot highlight colour
@@ -41,8 +41,6 @@
 #' @importFrom TxDb.Hsapiens.UCSC.hg38.knownGene TxDb.Hsapiens.UCSC.hg38.knownGene
 #' @importFrom GenomicRanges mcols mcols<-
 #' @export
-#' 
-#' @examples
 back_to_back_manhattan <- function(top_gRanges, bottom_gRanges, top_label, bottom_label, main, ymax = 15, tick_dist = 1e5, axis_label_margin = 0.03, main_title_cex = 2.7, axis_label_cex = 1.8, axis_label_offset = 0, axis_tick_cex = 1, plot_genes = F, gene_names_cex = 1, chrom_names_cex = 2, third_gRanges = NULL, third_label = NULL, chromosomes = NULL, zoom = NULL, plot_params = getDefaultPlotParams(plot.type = 4), top_gRanges_points.col = '2blues', bottom_gRanges_points.col = '2blues', third_gRanges_points.col = '2blues', points.cex = 1, top_highlight = NULL, bottom_highlight = NULL, third_highlight = NULL, top_highlight.col = 'greenyellow', bottom_highlight.col = 'greenyellow', third_highlight.col = 'greenyellow') {
 
   if(!is.null(chromosomes) & !is.null(zoom)) {

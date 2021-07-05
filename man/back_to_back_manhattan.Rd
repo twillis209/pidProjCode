@@ -24,7 +24,17 @@ back_to_back_manhattan(
   third_label = NULL,
   chromosomes = NULL,
   zoom = NULL,
-  plot_params = getDefaultPlotParams(plot.type = 4)
+  plot_params = getDefaultPlotParams(plot.type = 4),
+  top_gRanges_points.col = "2blues",
+  bottom_gRanges_points.col = "2blues",
+  third_gRanges_points.col = "2blues",
+  points.cex = 1,
+  top_highlight = NULL,
+  bottom_highlight = NULL,
+  third_highlight = NULL,
+  top_highlight.col = "greenyellow",
+  bottom_highlight.col = "greenyellow",
+  third_highlight.col = "greenyellow"
 )
 }
 \arguments{
@@ -42,7 +52,7 @@ back_to_back_manhattan(
 
 \item{tick_dist}{Distance in basepairs between chromosome diagram ticks}
 
-\item{axis_label_margin}{Size of margin between axis and its label}
+\item{axis_label_margin}{Size of margin between axis and its label (distance between axis and axis label)}
 
 \item{main_title_cex}{Scaling factor for main title}
 
@@ -67,6 +77,26 @@ back_to_back_manhattan(
 \item{zoom}{Coordinates for interval to magnify. Expects a string of the form 'chrx:a-b' where x is the chromosome number a and b are basepair coordinates.}
 
 \item{plot_params}{List of named plot parameters to pass to \code{plotKaryotype}}
+
+\item{top_gRanges_points.col}{Colours used to plot the points in top_gRanges}
+
+\item{bottom_gRanges_points.col}{Colours used to plot the points in bottom_gRanges}
+
+\item{third_gRanges_points.col}{Colours used to plot the points in third_gRanges}
+
+\item{points.cex}{Size of the point symbols}
+
+\item{top_highlight}{(GRanges, character vector, logical vector or numeric vector) The points to highlight in a different color in the top plot. If a GRanges (or anythng accepted by toGRanges) the points overlapping these regions will be highlighted. Otherwise the points will be selected with data\link{highlight}. If NULL no point will be highlighted. (defaults to NULL)}
+
+\item{bottom_highlight}{(GRanges, character vector, logical vector or numeric vector) The points to highlight in a different color in the bottom plot. If a GRanges (or anythng accepted by toGRanges) the points overlapping these regions will be highlighted. Otherwise the points will be selected with data\link{highlight}. If NULL no point will be highlighted. (defaults to NULL)}
+
+\item{third_highlight}{(GRanges, character vector, logical vector or numeric vector) The points to highlight in a different color in the third plot. If a GRanges (or anythng accepted by toGRanges) the points overlapping these regions will be highlighted. Otherwise the points will be selected with data\link{highlight}. If NULL no point will be highlighted. (defaults to NULL)}
+
+\item{top_highlight.col}{Top plot highlight colour}
+
+\item{bottom_highlight.col}{Bottom plot highlight colour}
+
+\item{third_highlight.col}{Third plot highlight colour}
 }
 \value{
 KaryoPlot object

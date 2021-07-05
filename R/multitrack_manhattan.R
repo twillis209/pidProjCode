@@ -20,7 +20,7 @@
 #' @param track_margin Proportion of track assigned to track margin
 #' @param points.col Colours used to plot points
 #' @param points.cex Size of the point symbols
-#' @param highlights List of GRanges, or character, numeric, or logical vectors giving the points to highlight in a different color in the top plot. If a GRanges (or anythng accepted by toGRanges) the points overlapping these regions will be highlighted. Otherwise the points will be selected with data[highlight]. If NULL no point will be highlighted. (defaults to NULL) [param description from karyoploteR::kpPlotManhattan]
+#' @param highlights List of GRanges, or character, numeric, or logical vectors giving the points to highlight in a different color in the top plot. If a GRanges (or anythng accepted by toGRanges) the points overlapping these regions will be highlighted. Otherwise the points will be selected with data[highlight]. If NULL no point will be highlighted. (defaults to NULL) 
 #' @param highlight.cols Colours for each highlight
 #'
 #' @return KaryoPlot

@@ -19,7 +19,11 @@ multitrack_manhattan(
   chrom_tick_dist = 1e+06,
   chrom_tick_cex = 1,
   plot_params = getDefaultPlotParams(plot.type = 4),
-  track_margin = 0.06
+  track_margin = 0.06,
+  points.col = "2blues",
+  points.cex = 1,
+  highlights = NULL,
+  highlight.cols = NULL
 )
 }
 \arguments{
@@ -31,7 +35,7 @@ multitrack_manhattan(
 
 \item{ymax}{Maximum value for y axes}
 
-\item{axis_label_margin}{Size of margin between axis and its label}
+\item{axis_label_margin}{Size of margin between axis and its label (distance between axis and axis label)}
 
 \item{main_title_cex}{Scaling factor for main title}
 
@@ -52,6 +56,14 @@ multitrack_manhattan(
 \item{plot_params}{List of named plot parameters to pass to \code{plotKaryotype}}
 
 \item{track_margin}{Proportion of track assigned to track margin}
+
+\item{points.col}{Colours used to plot points}
+
+\item{points.cex}{Size of the point symbols}
+
+\item{highlights}{List of GRanges, or character, numeric, or logical vectors giving the points to highlight in a different color in the top plot. If a GRanges (or anythng accepted by toGRanges) the points overlapping these regions will be highlighted. Otherwise the points will be selected with data\link{highlight}. If NULL no point will be highlighted. (defaults to NULL)}
+
+\item{highlight.cols}{Colours for each highlight}
 }
 \value{
 KaryoPlot
