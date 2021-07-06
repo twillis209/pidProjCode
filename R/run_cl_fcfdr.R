@@ -19,8 +19,9 @@ run_cl_fcfdr <- function(cl_args, PID_ROOT = Sys.getenv('pidRoot')) {
   parser$add_argument('-v', '--v_values', action = 'store', dest = 'v_values', type = 'character', help = 'Comma-delimited list of labels of v-value columns. Order should match that of auxiliary trait labels', required  =  T)
   parser$add_argument('-ac', '--add_columns', nargs = '*', type = 'character', help = 'Additional columns to include in the output to identify SNPs', default = c('SNPID', 'REF', 'ALT'))
   parser$add_argument('-at', '--aux_transform', nargs = '+', type = 'character', help = 'Comma-delimited list of transformations to apply to auxiliary values. Order should match that of auxiliary trait labels. Current valid values: \'identity\', \'log\', \'z\'', required = T)
-  parser$add_argument('-op', '--outputPath', type = 'character', help = 'Path to output file', required = T)
-  parser$add_argument('-nt', '--noOfThreads', type = 'integer', help = 'Number of threads to use', default = 1)
+  parser$add_argument('-o', '--outputPath', type = 'character', help = 'Path to output file', required = T)
+  parser$add_argument('-nt', '--no_of_threads', type = 'integer', help = 'Number of threads to use', default = 1)
+  parser$add_argument('-si', '--start_index', type = 'integer', help = 'Index of auxiliary trait to take as first auxiliary covariate. Used for restarting jobs where results file contains partial results.', default = 1)
 
   trans <- list(log = log, identity = identity, z = function(x) qnorm(x/2))
 
@@ -39,15 +40,28 @@ run_cl_fcfdr <- function(cl_args, PID_ROOT = Sys.getenv('pidRoot')) {
     stop("Specified auxiliary transformations contain values not matching one of following valid transformation identifiers: \'identity\', \'log\', \'z\'")
   }
 
-  setDTthreads(threads=args$noOfThreads)
+  if(args$start_index < 1 || args$start_index > length(args$auxiliary)) {
+    stop("Invalid start index. Must be a positive integer and no greater than the number of auxiliary covariates supplied")
+  }
+
+  setDTthreads(threads=args$no_of_threads)
 
   gwasCols <- c(args$chromosome, args$basepair, args$add_columns, args$maf, args$principal, args$auxiliary, args$weights)
+
+  if(args$start_index > 1) {
+    gwasCols <- c(gwasCols, args$v_values[1:(args$start_index-1)])
+  }
 
   dat <- fread(args$input_file, sep = '\t', header = T, select = gwasCols)
 
   if(any(!is.element(gwasCols, names(dat)))) {
     stop(sprintf("data.table object is missing the following columns specified in the command-line arguments: %s\n", paste(gwasCols[!is.element(gwasCols, names(dat))], collapse = ', ')))
   }
+
+#  if(args$start_index > 1 & any(!is.element(args$v_values[1:args$start_index], names(dat)))) {
+#    missing_v_values <- paste((args$v_values[1:args$start_index])[!is.element(args$v_values[1:args$start_index], names(dat))], collapse = ', ')
+#    stop(sprintf("v-values columns %s missing from input file, cannot restart at index %d", missing_v_values, args$start_index))
+#  }
 
   dat <- dat[!(get(args$chromosome) == 6 & get(args$basepair) %between% c(24e6, 45e6))]
 
@@ -61,7 +75,7 @@ run_cl_fcfdr <- function(cl_args, PID_ROOT = Sys.getenv('pidRoot')) {
 
   prin_pvalues <- c(args$principal, args$v_values)
 
-  for(i in seq_along(args$auxiliary)) {
+  for(i in args$start_index:length(args$auxiliary)) {
     # prin_pvalues[i] should never contain NA values as we drop the ur_prin_pvalues NA rows then carry over
     # If we only want to include values for which we have LDAK weight values, include !is.na(get(aux_weights[i]))
     print(sprintf('Iteration %d', i))

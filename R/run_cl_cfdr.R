@@ -4,7 +4,7 @@
 #' @param PID_ROOT Path to root of PID project directory tree
 #' @import data.table
 #' @import argparse
-#' @importFrom parallel mclapply
+#' @importFrom parallel mclapply mcmapply
 #' @importFrom cfdr vl il fit.2g
 #' @export
 run_cl_cfdr <- function(cl_args, PID_ROOT = Sys.getenv('pidRoot')) {
@@ -18,8 +18,9 @@ run_cl_cfdr <- function(cl_args, PID_ROOT = Sys.getenv('pidRoot')) {
   parser$add_argument('-w', '--weights', action = 'store', dest = 'weights', type = 'character', help = 'Comma-delimited list of labels of weight columns. Order should match that of auxiliary trait labels', required  =  T)
   parser$add_argument('-v', '--v_values', action = 'store', dest = 'v_values', type = 'character', help = 'Comma-delimited list of labels of v-value columns. Order should match that of auxiliary trait labels', required  =  T)
   parser$add_argument('-ac', '--add_columns', nargs = '*', type = 'character', help = 'Additional columns to include in the output to identify SNPs', default = c('SNPID', 'REF', 'ALT'))
-  parser$add_argument('-op', '--outputPath', type = 'character', help = 'Path to output file', required = T)
-  parser$add_argument('-nt', '--noOfThreads', type = 'integer', help = 'Number of threads to use', default = 1)
+  parser$add_argument('-o', '--outputPath', type = 'character', help = 'Path to output file', required = T)
+  parser$add_argument('-nt', '--no_of_threads', type = 'integer', help = 'Number of threads to use', default = 1)
+  parser$add_argument('-si', '--start_index', type = 'integer', help = 'Index of auxiliary trait to take as first auxiliary covariate. Used for restarting jobs where results file contains partial results.', default = 1)
 
   args <- parser$parse_args(cl_args)
 
@@ -27,15 +28,28 @@ run_cl_cfdr <- function(cl_args, PID_ROOT = Sys.getenv('pidRoot')) {
   args$weights <- unlist(strsplit(args$weights, ','))
   args$v_values <- unlist(strsplit(args$v_values, ','))
 
-  setDTthreads(threads=args$noOfThreads)
+  if(args$start_index < 1 || args$start_index > length(args$auxiliary)) {
+    stop("Invalid start index. Must be a positive integer and no greater than the number of auxiliary covariates supplied")
+  }
+
+  setDTthreads(threads=args$no_of_threads)
 
   gwasCols <- c(args$chromosome, args$basepair, args$add_columns, args$principal, args$auxiliary, args$weights)
+
+  if(args$start_index > 1) {
+    gwasCols <- c(gwasCols, args$v_values[1:(args$start_index-1)])
+  }
 
   dat <- fread(args$input_file, sep = '\t', header = T, select = gwasCols)
 
   if(any(!is.element(gwasCols, names(dat)))) {
     stop(sprintf("data.table object is missing the following columns specified in the command-line arguments: %s\n", paste(gwasCols[!is.element(gwasCols, names(dat))], collapse = ', ')))
   }
+
+#  if(args$start_index > 1 & any(!is.element(args$v_values[1:args$start_index], names(dat)))) {
+#    missing_v_values <- paste((args$v_values[1:args$start_index])[!is.element(args$v_values[1:args$start_index], names(dat))], collapse = ', ')
+#    stop(sprintf("v-values columns %s missing from input file, cannot restart at index %d", missing_v_values, args$start_index))
+#  }
 
   dat <- dat[!(get(args$chromosome) == 6 & get(args$basepair) %between% c(24e6, 45e6))]
 
@@ -49,7 +63,7 @@ run_cl_cfdr <- function(cl_args, PID_ROOT = Sys.getenv('pidRoot')) {
 
   prin_pvalues <- c(args$principal, args$v_values)
 
-  for(i in seq_along(args$auxiliary)) {
+  for(i in args$start_index:length(args$auxiliary)) {
     # prin_pvalues[i] should never contain NA values as we drop the ur_prin_pvalues NA rows then carry over
     print(sprintf('Iteration %d', i))
 
@@ -69,12 +83,12 @@ run_cl_cfdr <- function(cl_args, PID_ROOT = Sys.getenv('pidRoot')) {
 
     rm(q0_dat)
 
-    folds <- mclapply(unique(sub_dat[[args$chromosome]]), function(x) which(sub_dat[[args$chromosome]]==x), mc.cores = args$noOfThreads)
+    folds <- mclapply(unique(sub_dat[[args$chromosome]]), function(x) which(sub_dat[[args$chromosome]]==x), mc.cores = args$no_of_threads)
 
     candidate_indices <- sub_dat[get(args$principal) < args$p_threshold, which = T]
 
     # Organise the candidate indices by fold
-    ind <- mclapply(folds, function(x) intersect(candidate_indices, x), mc.cores = args$noOfThreads)
+    ind <- mclapply(folds, function(x) intersect(candidate_indices, x), mc.cores = args$no_of_threads)
 
     # Exclude ind, folds with no data points
     non_empty_indices <- ind[sapply(ind, function(x) length(x) > 0)]
@@ -82,7 +96,7 @@ run_cl_cfdr <- function(cl_args, PID_ROOT = Sys.getenv('pidRoot')) {
     folds_with_indices <- folds[sapply(ind, function(x) length(x) > 0)]
 
     # Compute L-regions
-    v <- mcmapply(function(x,y) vl(sub_dat[[prin_pvalues[i]]], sub_dat[[args$auxiliary[i]]], indices = x, mode = 2, fold = y), non_empty_indices, folds_with_indices, mc.cores = args$noOfThreads, SIMPLIFY = F)
+    v <- mcmapply(function(x,y) vl(sub_dat[[prin_pvalues[i]]], sub_dat[[args$auxiliary[i]]], indices = x, mode = 2, fold = y), non_empty_indices, folds_with_indices, mc.cores = args$no_of_threads, SIMPLIFY = F)
 
     # il calls are fast enough not to justify their being parallelised
     # Integrate over L-regions to obtain v-values
