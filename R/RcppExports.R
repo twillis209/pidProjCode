@@ -12,7 +12,7 @@
 #' 
 #' @author Tom Willis
 ecdf_cpp <- function(reference, sample) {
-    .Call('_pidProjCode_ecdf_cpp', PACKAGE = 'pidProjCode', reference, sample)
+    .Call(`_pidProjCode_ecdf_cpp`, reference, sample)
 }
 
 #' @title Bivariate empirical cdf
@@ -28,7 +28,7 @@ ecdf_cpp <- function(reference, sample) {
 #' 
 #' @author Tom Willis
 bivariate_ecdf_cpp <- function(u_ref, v_ref) {
-    .Call('_pidProjCode_bivariate_ecdf_cpp', PACKAGE = 'pidProjCode', u_ref, v_ref)
+    .Call(`_pidProjCode_bivariate_ecdf_cpp`, u_ref, v_ref)
 }
 
 #' @title Parallel implementation of bivariate empirical cdf
@@ -44,6 +44,6 @@ bivariate_ecdf_cpp <- function(u_ref, v_ref) {
 #' 
 #' @author Tom Willis
 bivariate_ecdf_par_cpp <- function(u_ref, v_ref) {
-    .Call('_pidProjCode_bivariate_ecdf_par_cpp', PACKAGE = 'pidProjCode', u_ref, v_ref)
+    .Call(`_pidProjCode_bivariate_ecdf_par_cpp`, u_ref, v_ref)
 }
 

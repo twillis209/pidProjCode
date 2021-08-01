@@ -1,4 +1,3 @@
-
 #' @title Genome-wide pairwise association signal statistic
 #'
 #' @param u Vector of p-values

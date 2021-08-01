@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // ecdf_cpp
 NumericVector ecdf_cpp(NumericVector reference, NumericVector sample);
 RcppExport SEXP _pidProjCode_ecdf_cpp(SEXP referenceSEXP, SEXP sampleSEXP) {
