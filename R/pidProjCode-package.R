@@ -7,3 +7,8 @@ NULL
 #' @importFrom Rcpp sourceCpp
 ## usethis namespace: end
 NULL
+
+## usethis namespace: start
+#' @importFrom RcppParallel RcppParallelLibs
+## usethis namespace: end
+NULL
