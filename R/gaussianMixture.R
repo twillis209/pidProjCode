@@ -21,5 +21,6 @@
 rmixture<-function(n, pi, mean, sd) {
   n0<-sum(runif(n)<=pi)
 
-  c(rnorm(n0), (sd*rnorm(n-n0))+mean)
+  # Use sample to shuffle into random order
+  sample(c(rnorm(n0), (sd*rnorm(n-n0))+mean), n)
 }
