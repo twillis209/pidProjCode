@@ -58,20 +58,26 @@ mix_rexp <- function(n, rates = c(5,1), alt_weight = 0.01, pval_scale = F) {
 #' @return Sample from the GPS null distribution
 #' @export
 rgps <- function(n, no_snps, rates = c(5,1), alt_weight = 0.01) {
-  sam <- mix_rexp(n*2*no_snps, rates = rates, alt_weight = alt_weight, pval_scale = T)
-
   gps_results <- numeric(n)
-  # [(1, no_snps, no_snps+1, 2*no_snps)], [(1+2*no_snps, 3*no_snps, 3*no_snps+1, 4*no_snps)]
+
   for(i in 0:(n-1)) {
-    #    print("Indices")
-    #    indices <- c((2*i*no_snps+1), ((2*i+1)*no_snps), ((2*i+1)*no_snps+1), ((2*i+2)*no_snps))
-    #    print(indices)
-    #    
-    #    print("Vector lengths")
-    #    lengths <- c(length(sam[(2*i*no_snps+1):((2*i+1)*no_snps)]), length(sam[((2*i+1)*no_snps+1):((2*i+2)*no_snps)]))
-    #    print(lengths)
-    
-    gps_results[i+1] <- pidProjCode::gps_test_stat(sam[(2*i*no_snps+1):((2*i+1)*no_snps)], sam[((2*i+1)*no_snps+1):((2*i+2)*no_snps)])
+    j <- 1
+
+    gps_attempt <- NA
+
+    while(j < 6 & is.na(gps_attempt)) {
+    sam <- mix_rexp(2*no_snps, rates = rates, alt_weight = alt_weight, pval_scale = T)
+
+    gps_attempt <- try(gps_test_stat(sam[1:no_snps], sam[(no_snps+1):(2*no_snps)]), silent = T)
+
+    j <- j+1
+    }
+
+    if(!is.na(gps_attempt)) {
+      gps_results[i+1] <- gps_attempt
+    } else {
+      stop(sprintf("Failed to generate GPS sample realisation %d after 5 attempts", i+1))
+    }
   }
 
   gps_results
