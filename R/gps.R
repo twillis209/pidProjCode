@@ -7,7 +7,35 @@
 #'
 #' @return Numeric value of statistic
 #' @export
-gps_test_stat<- function(u, v) {
+gps <- function(u, v) {
+  if(length(u) != length(v)) {
+    stop("Lengths of u and v differ")
+  }
+
+  n <- length(u)
+
+  cdf_u <- ecdf_cpp(u, u)
+  cdf_v <- ecdf_cpp(v, v)
+  cdf_u_v <- bivariate_ecdf_par_cpp(u, v)
+
+  denom <- sqrt(cdf_u*cdf_v - (cdf_u^2)*(cdf_v^2))
+
+  # TODO I believe this only happens when max(u) and max(v) have same index
+  if(any(denom == 0)) {
+    stop("One or more zero values in the denominator")
+  }
+
+  max(sqrt(n/log(n))*abs(cdf_u_v - (cdf_u*cdf_v))/denom)
+}
+
+#' @title Vector of GPS statistic maximands
+#'
+#' @param u Vector of p-values
+#' @param v Vector of p-values
+#'
+#' @return Vector of maximands
+#' @export
+gps_maximands<- function(u, v) {
   if(length(u) != length(v)) {
     stop("Lengths of u and v differ")
   }
@@ -24,7 +52,7 @@ gps_test_stat<- function(u, v) {
     stop("One or more zero values in the denominator")
   }
 
-  max(sqrt(n/log(n))*abs(cdf_u_v - (cdf_u*cdf_v))/denom)
+  sqrt(n/log(n))*abs(cdf_u_v - (cdf_u*cdf_v))/denom
 }
 
 #' @title Generates samples from two-part mixture of exponentials
