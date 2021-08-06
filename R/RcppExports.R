@@ -10,6 +10,7 @@
 #' @param sample NumericVector containing points at which to evaluate empirical cdf
 #' @return NumericVector of estimated quantiles of sample values
 #' 
+#' @export
 #' @author Tom Willis
 ecdf_cpp <- function(reference, sample) {
     .Call(`_pidProjCode_ecdf_cpp`, reference, sample)
@@ -25,7 +26,7 @@ ecdf_cpp <- function(reference, sample) {
 #' @param v_ref NumericVector reference points in second dimension
 #'
 #' @return NumericVector of estimated quantiles of specified pairs
-#' 
+#' @export
 #' @author Tom Willis
 bivariate_ecdf_cpp <- function(u_ref, v_ref) {
     .Call(`_pidProjCode_bivariate_ecdf_cpp`, u_ref, v_ref)
@@ -42,6 +43,7 @@ bivariate_ecdf_cpp <- function(u_ref, v_ref) {
 #'
 #' @return NumericVector of estimated quantiles of specified pairs
 #' 
+#' @export
 #' @author Tom Willis
 bivariate_ecdf_par_cpp <- function(u_ref, v_ref) {
     .Call(`_pidProjCode_bivariate_ecdf_par_cpp`, u_ref, v_ref)

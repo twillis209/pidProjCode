@@ -14,6 +14,7 @@ using namespace RcppParallel;
 //' @param sample NumericVector containing points at which to evaluate empirical cdf
 //' @return NumericVector of estimated quantiles of sample values
 //' 
+//' @export
 //' @author Tom Willis
 // [[Rcpp::export]]
 NumericVector ecdf_cpp(NumericVector reference, NumericVector sample) {
@@ -40,7 +41,7 @@ NumericVector ecdf_cpp(NumericVector reference, NumericVector sample) {
 //' @param v_ref NumericVector reference points in second dimension
 //'
 //' @return NumericVector of estimated quantiles of specified pairs
-//' 
+//' @export
 //' @author Tom Willis
 // [[Rcpp::export]]
 NumericVector bivariate_ecdf_cpp(NumericVector u_ref, NumericVector v_ref) {
@@ -107,6 +108,7 @@ struct bivariate_ecdf_worker : public Worker {
 //'
 //' @return NumericVector of estimated quantiles of specified pairs
 //' 
+//' @export
 //' @author Tom Willis
 // [[Rcpp::export]]
 NumericVector bivariate_ecdf_par_cpp(NumericVector u_ref, NumericVector v_ref) {
