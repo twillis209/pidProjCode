@@ -96,7 +96,7 @@ rgps <- function(n, no_snps, rates = c(5,1), alt_weight = 0.01) {
     while(j < 6 & is.na(gps_attempt)) {
     sam <- mix_rexp(2*no_snps, rates = rates, alt_weight = alt_weight, pval_scale = T)
 
-    gps_attempt <- try(gps_test_stat(sam[1:no_snps], sam[(no_snps+1):(2*no_snps)]), silent = T)
+    gps_attempt <- try(gps(sam[1:no_snps], sam[(no_snps+1):(2*no_snps)]), silent = T)
 
     j <- j+1
     }
