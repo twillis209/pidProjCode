@@ -10,6 +10,8 @@
 gps <- function(u, v) {
   if(length(u) != length(v)) {
     stop("Lengths of u and v differ")
+  } else if(which.max(u) == which.max(v)) {
+    stop("Indices of largest elements of u and v coincide. GPS statistic is undefined in this case.")
   }
 
   n <- length(u)
@@ -20,7 +22,7 @@ gps <- function(u, v) {
 
   denom <- sqrt(cdf_u*cdf_v - (cdf_u^2)*(cdf_v^2))
 
-  # TODO I believe this only happens when max(u) and max(v) have same index
+  # TODO I believe this only happens when max(u) and max(v) have same index, so we should never reach this case
   if(any(denom == 0)) {
     stop("One or more zero values in the denominator")
   }
