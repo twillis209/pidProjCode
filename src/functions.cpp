@@ -1,6 +1,8 @@
 #include <Rcpp.h>
 #include <Rmath.h>
 #include <RcppParallel.h>
+#include <Eigen/Dense>
+#include <fastCDFOnSample.h>
 
 using namespace Rcpp;
 using namespace RcppParallel;
@@ -126,4 +128,40 @@ NumericVector bivariate_ecdf_par_cpp(NumericVector u_ref, NumericVector v_ref) {
   parallelFor(0, n, ecdf_worker);
 
   return emp_quantiles/((double) n);
+}
+
+//' @title Bivariate empirical cdf using novel divide-and-conquer algorithm
+//'
+//' 
+//' @param u_ref NumericVector reference points in first dimension
+//' @param v_ref NumericVector reference points in second dimension
+//'
+//' @return NumericVector of estimated quantiles of specified pairs
+//' 
+//' @export
+//' @author Tom Willis
+// [[Rcpp::export]]
+NumericVector bivariate_ecdf_lw_cpp(NumericVector u_ref, NumericVector v_ref) {
+  int n = u_ref.size();
+
+  Eigen::ArrayXd toAdd = Eigen::ArrayXd::Constant(n, 1.);
+
+  Eigen::ArrayXXd ptr(2, n);
+
+  for(int i = 0; i < n; i++) {
+    ptr(0, i) = u_ref[i];
+    ptr(1, i) = v_ref[i];
+  }
+
+  // TODO surely it's not necessary to copy about like this?
+  Eigen::ArrayXd ecdf_arr = StOpt::fastCDFOnSample(ptr, toAdd);
+
+  // TODO could just skip this step?
+  //std::vector<double> ecdf_vec(ecdf_arr.data(), ecdf_arr.data() + ecdf_arr.size());
+
+  NumericVector ecdf_nvec(ecdf_arr.data(), ecdf_arr.data() + ecdf_arr.size());
+  // ArrayXd does not provide begin() and end() methods
+  //  NumericVector ecdf_nvec(ecdf_vec.begin(), ecdf_vec.end());
+
+  return ecdf_nvec;
 }

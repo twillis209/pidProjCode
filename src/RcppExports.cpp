@@ -46,11 +46,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// bivariate_ecdf_lw_cpp
+NumericVector bivariate_ecdf_lw_cpp(NumericVector u_ref, NumericVector v_ref);
+RcppExport SEXP _pidProjCode_bivariate_ecdf_lw_cpp(SEXP u_refSEXP, SEXP v_refSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type u_ref(u_refSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type v_ref(v_refSEXP);
+    rcpp_result_gen = Rcpp::wrap(bivariate_ecdf_lw_cpp(u_ref, v_ref));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_pidProjCode_ecdf_cpp", (DL_FUNC) &_pidProjCode_ecdf_cpp, 2},
     {"_pidProjCode_bivariate_ecdf_cpp", (DL_FUNC) &_pidProjCode_bivariate_ecdf_cpp, 2},
     {"_pidProjCode_bivariate_ecdf_par_cpp", (DL_FUNC) &_pidProjCode_bivariate_ecdf_par_cpp, 2},
+    {"_pidProjCode_bivariate_ecdf_lw_cpp", (DL_FUNC) &_pidProjCode_bivariate_ecdf_lw_cpp, 2},
     {NULL, NULL, 0}
 };
 

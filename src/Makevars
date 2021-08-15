@@ -1,2 +1,3 @@
 CXX_STD = CXX11
-PKG_LIBS += $(shell ${R_HOME}/bin/Rscript -e "RcppParallel::RcppParallelLibs()")
+PKG_CPPFLAGS = -I/home/tw395/opt/include/StOpt/cdf -I/home/tw395/opt/include/eigen3
+PKG_LIBS += $(shell ${R_HOME}/bin/Rscript -e "RcppParallel::RcppParallelLibs()") -L/home/tw395/opt/lib -lStOpt -Wl,-rpath,/home/tw395/opt/lib

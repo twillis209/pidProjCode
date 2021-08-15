@@ -2,6 +2,7 @@
 
 export(back_to_back_manhattan)
 export(bivariate_ecdf_cpp)
+export(bivariate_ecdf_lw_cpp)
 export(bivariate_ecdf_par_cpp)
 export(compute_maf_table)
 export(ecdf_cpp)

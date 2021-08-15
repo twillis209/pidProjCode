@@ -49,3 +49,17 @@ bivariate_ecdf_par_cpp <- function(u_ref, v_ref) {
     .Call(`_pidProjCode_bivariate_ecdf_par_cpp`, u_ref, v_ref)
 }
 
+#' @title Bivariate empirical cdf using novel divide-and-conquer algorithm
+#'
+#' 
+#' @param u_ref NumericVector reference points in first dimension
+#' @param v_ref NumericVector reference points in second dimension
+#'
+#' @return NumericVector of estimated quantiles of specified pairs
+#' 
+#' @export
+#' @author Tom Willis
+bivariate_ecdf_lw_cpp <- function(u_ref, v_ref) {
+    .Call(`_pidProjCode_bivariate_ecdf_lw_cpp`, u_ref, v_ref)
+}
+
