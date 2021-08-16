@@ -153,15 +153,9 @@ NumericVector bivariate_ecdf_lw_cpp(NumericVector u_ref, NumericVector v_ref) {
     ptr(1, i) = v_ref[i];
   }
 
-  // TODO surely it's not necessary to copy about like this?
   Eigen::ArrayXd ecdf_arr = StOpt::fastCDFOnSample(ptr, toAdd);
 
-  // TODO could just skip this step?
-  //std::vector<double> ecdf_vec(ecdf_arr.data(), ecdf_arr.data() + ecdf_arr.size());
-
   NumericVector ecdf_nvec(ecdf_arr.data(), ecdf_arr.data() + ecdf_arr.size());
-  // ArrayXd does not provide begin() and end() methods
-  //  NumericVector ecdf_nvec(ecdf_vec.begin(), ecdf_vec.end());
 
   return ecdf_nvec;
 }
