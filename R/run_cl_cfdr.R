@@ -21,6 +21,7 @@ run_cl_cfdr <- function(cl_args, PID_ROOT = Sys.getenv('pidRoot')) {
   parser$add_argument('-o', '--outputPath', type = 'character', help = 'Path to output file', required = T)
   parser$add_argument('-nt', '--no_of_threads', type = 'integer', help = 'Number of threads to use', default = 1)
   parser$add_argument('-si', '--start_index', type = 'integer', help = 'Index of auxiliary trait to take as first auxiliary covariate. Used for restarting jobs where results file contains partial results.', default = 1)
+  parser$add_argument('-rd', '--rdata_file', type = 'character', help = 'Path to RData file to write out containing vl return values', default = NULL)
 
   args <- parser$parse_args(cl_args)
 
@@ -97,6 +98,10 @@ run_cl_cfdr <- function(cl_args, PID_ROOT = Sys.getenv('pidRoot')) {
 
     # Compute L-regions
     v <- mcmapply(function(x,y) vl(sub_dat[[prin_pvalues[i]]], sub_dat[[args$auxiliary[i]]], indices = x, mode = 2, fold = y), non_empty_indices, folds_with_indices, mc.cores = args$no_of_threads, SIMPLIFY = F)
+
+    if(args$rdata_file) {
+      save(v, args$rdata_file)
+    }
 
     # il calls are fast enough not to justify their being parallelised
     # Integrate over L-regions to obtain v-values

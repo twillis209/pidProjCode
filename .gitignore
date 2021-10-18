@@ -14,3 +14,4 @@ tests/testthat/*.png
 *.png
 tests/testthat/Rplots.pdf
 scratch
+.RData
