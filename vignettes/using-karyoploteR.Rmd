@@ -220,11 +220,7 @@ kp <- kpPlotManhattan(kp, data = pidGRanges, r0 = 0.5, r1 = 0, ymax = 10, points
 legend(x = "topright", fill = c("#6caeff", "#2b5d9b"), legend = c("IgAD", "PID"))
 ```
 
-<<<<<<< HEAD
 ## `backToBackManhattan`
-=======
-## Using `back_to_back_manhattan`
->>>>>>> 734f7eb89c3f641a70076d4def02851bb85285be
 
 I have written a convenience function, `back_to_back_manhattan`, for drawing 'back-to-back' Manhattan plots with `karyoploteR`. These plots allow one to compare results from two GWAS. The function itself does nothing clever and was written merely to save my having to copy and tweak the same boilerplate plotting code over and over.
 
