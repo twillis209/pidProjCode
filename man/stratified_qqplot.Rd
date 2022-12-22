@@ -24,7 +24,7 @@ stratified_qqplot(
 ggplot object
 }
 \description{
-
+Writes out a stratified Q-Q plot.
 }
 \details{
 Note that this function does not do the heavy lifting of styling the plot's aesthetics.
